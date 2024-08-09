@@ -31,7 +31,7 @@
                                             <ul class="dropdown-menu bg-warning">
                                             <li><a class="dropdown-item text-dark" href="{{ url_for('users.user_maintenance') }}">User</a></li>
                                             <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.blog_maintenance') }}">Blog</a></li>
-                                            <li><a class="dropdown-item text-dark" href="#">Category</a></li>
+                                            <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.category_maintenance') }}">Category</a></li>
                                             </ul>
                                         </li>
                                     {% endif %}

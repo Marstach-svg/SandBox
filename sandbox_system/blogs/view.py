@@ -54,6 +54,12 @@ def search():
         searchtext = form.searchtext.data
     elif request.method == 'GET':
         form.searchtext.data == ''
+    if category_form.validate_on_submit():
+        new_category = BlogCategory(category=category_form.category.data)
+        db.session.add(new_category)
+        db.session.commit()
+        flash('カテゴリが追加されました')
+        return redirect(url_for('blogs.blog_list'))
     #ブログ記事の取得
     page = request.args.get('page', 1, type=int)
     blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
@@ -65,6 +71,12 @@ def search():
 def category_blog(blog_category_id):
     form = BlogSearchForm()
     category_form = BlogCategoryForm()
+    if category_form.validate_on_submit():
+        new_category = BlogCategory(category=category_form.category.data)
+        db.session.add(new_category)
+        db.session.commit()
+        flash('カテゴリが追加されました')
+        return redirect(url_for('blogs.blog_list'))
     blog_category = BlogCategory.query.filter_by(id=blog_category_id).first()
     page = request.args.get('page', 1, type=int)
     blogs = Blog.query.filter_by(category_id=blog_category_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
@@ -76,6 +88,12 @@ def category_blog(blog_category_id):
 def user_blog(user_id):
     form = BlogSearchForm()
     category_form = BlogCategoryForm()
+    if category_form.validate_on_submit():
+        new_category = BlogCategory(category=category_form.category.data)
+        db.session.add(new_category)
+        db.session.commit()
+        flash('カテゴリが追加されました')
+        return redirect(url_for('blogs.blog_list'))
     blog_user = Blog.query.filter_by(user_id=user_id).first()
     page = request.args.get('page', 1, type=int)
     blogs = Blog.query.filter_by(user_id=user_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
@@ -91,3 +109,12 @@ def blog_maintenance():
     page = request.args.get('page', 1, type=int)
     blogs = Blog.query.order_by(Blog.id).paginate(page=page, per_page=10)
     return render_template('maintenance/blog_maintenance.html', blogs=blogs)
+
+@blogs.route('/category_maintenance')
+@login_required
+def category_maintenance():
+    if not current_user.is_administrator():
+        abort(403)
+    page = request.args.get('page', 1, type=int)
+    categories = BlogCategory.query.order_by(BlogCategory.id).paginate(page=page, per_page=10)
+    return render_template('maintenance/category_maintenance.html', categories=categories)
