@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-warning-subtle">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <!-- Ckeditor -->
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <title>SandBox</title>
+</head>
+<body>
+    <div class="bg-warning-subtle">
+        <div class="position-sticky" style="top: 1rem;">
+            <header class="mb-5">
+                <div class="container-fluid">
+                    <nav class="navbar navbar-expand-lg bg-dark form-control form-control-lg mt-3">
+                        <div class="container-fluid">
+                            <a class="navbar-brand ms-5 text-warning" href="{{ url_for('users.index') }}">SandBox</a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                                <ul class="navbar-nav ms-auto">
+                                {% if current_user.is_authenticated %}
+                                    {% if current_user.is_administrator() %}
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle text-warning" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Maintenance
+                                            </a>
+                                            <ul class="dropdown-menu bg-warning">
+                                            <li><a class="dropdown-item text-dark" href="{{ url_for('users.user_maintenance') }}">User</a></li>
+                                            <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.blog_maintenance') }}">Blog</a></li>
+                                            <li><a class="dropdown-item text-dark" href="#">Category</a></li>
+                                            </ul>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a class="nav-link active text-warning mx-2" aria-current="page" href="{{ url_for('users.index') }}">Home</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-warning" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Blog
+                                    </a>
+                                    <ul class="dropdown-menu bg-warning">
+                                    <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.blog_list') }}">All</a></li>
+                                    <li><a class="dropdown-item text-dark" href="#">SandBox</a></li>
+                                    <li><a class="dropdown-item text-dark" href="#">Others</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-warning mx-2" href="{{ url_for('chats.chat_index') }}">Chat</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-warning mx-2" href="#">Event</a>
+                                </li>
+                                {% if current_user.is_authenticated %}
+                                    <li class="nav-item">
+                                        <a class="nav-link text-warning mx-2 me-5" href="{{ url_for('users.my_page') }}">MyPage</a>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item">
+                                        <a class="nav-link text-warning mx-2 me-5" href="{{ url_for('users.login') }}">Login</a>
+                                    </li>
+                                {% endif %}
+
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+        </div>
+
+        {% from '_formhelper.html' import render_field %}
+        <!-- 要チェック -->
+        {% if get_flashed_messages() %}
+            <div class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+                {% for message in get_flashed_messages() %}
+                <div class="alert alert-dark alert-dismissible fade show text-light" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}
+
+        {% endblock %}
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-9">
+            <div class="card mb-5">
+                <div class="container">
+                    <div class="container text-center my-5">
+                        <h1>{{ blog.title }}</h1>
+                        <hr>
+                        <p>{{ blog.date }} : {{ blog.author.username }} : {{ blog.blogcategory.category }}</p>
+                    </div>
+                    {% if blog.image %}
+                    <div class="mb-3" style="text-align: center;">
+                    <img src="{{ url_for('static', filename='image/' + blog.image) }}" class="img-fluid">
+                    </div>
+                    {% endif %}
+                    <p>{{ blog.text|safe }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="position-sticky mt-2" style="top: 2rem;">
+                <div class="container-fluid mb-5">
+                    <form action="{{ url_for('blogs.search') }}" class="d-flex" method="post">
+                        {{ form.hidden_tag() }}
+                        {{ render_field(form.searchtext, class="form-control", placeholder="検索テキストを入力") }}
+                        {{ form.submit (class="btn btn-warning") }}
+                    </form>
+                </div>
+                <div class="container">
+                    <h4>Category <span class="fs-6 ms-2">カテゴリ一覧</span></h4>
+                    <hr>
+                    <ol class="list-unstyled">
+                        <li>
+                            <a href="#" class="text-decoration-none">ハッカソン</a>
+                        </li>
+                        <hr>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
