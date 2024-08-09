@@ -15,13 +15,13 @@
                     <th></th>
                 </tr>
                 </thead>
-                {% for blog in blogs %}
+                {% for blog in blogs.items %}
                 <tbody>
                 <tr>
                     <td>{{ blog.id }}</td>
                     <td>{{ blog.title }}</td>
                     <td>{{ blog.date }}</td>
-                    <td>{{ blog.author }}</td>
+                    <td>{{ blog.author.username }}</td>
                     <td><a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="btn btn-secondary">詳細</a></td>
                 </tr>
                 </tbody>

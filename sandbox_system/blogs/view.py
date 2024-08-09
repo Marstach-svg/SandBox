@@ -7,7 +7,7 @@ from sandbox_system.blogs.image import add_image
 
 blogs = Blueprint('blogs', __name__)
 
-@blogs.route('/blog_list')
+@blogs.route('/blog_list', methods=['GET', 'POST'])
 def blog_list():
     form = BlogSearchForm()
     category_form = BlogCategoryForm()
@@ -42,13 +42,13 @@ def blog_create():
 def blog(blog_id):
     blog = Blog.query.get_or_404(blog_id)
     form = BlogSearchForm()
-    category_form = BlogCategoryForm()
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
-    return render_template('blog/blog.html', blog=blog, form=form, category_form=category_form, blog_categories=blog_categories)
+    return render_template('blog/blog.html', blog=blog, form=form, blog_categories=blog_categories)
 
 @blogs.route('/search', methods=['GET', 'POST'])
 def search():
     form = BlogSearchForm()
+    category_form = BlogCategoryForm()
     searchtext = ''
     if form.validate_on_submit():
         searchtext = form.searchtext.data
@@ -59,17 +59,29 @@ def search():
     blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     #カテゴリの取得
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
-    return render_template('blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, searchtext=searchtext)
+    return render_template('blog/blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext)
 
 @blogs.route('/<int:blog_category_id>/category_blog', methods=['GET', 'POST'])
 def category_blog(blog_category_id):
     form = BlogSearchForm()
+    category_form = BlogCategoryForm()
     blog_category = BlogCategory.query.filter_by(id=blog_category_id).first()
     page = request.args.get('page', 1, type=int)
     blogs = Blog.query.filter_by(category_id=blog_category_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     #カテゴリの取得
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
-    return render_template('blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, blog_category=blog_category)
+    return render_template('blog/blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, blog_category=blog_category)
+
+@blogs.route('/<int:user_id>/user_blog', methods=['GET', 'POST'])
+def user_blog(user_id):
+    form = BlogSearchForm()
+    category_form = BlogCategoryForm()
+    blog_user = Blog.query.filter_by(user_id=user_id).first()
+    page = request.args.get('page', 1, type=int)
+    blogs = Blog.query.filter_by(user_id=user_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+    #カテゴリの取得
+    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    return render_template('blog/blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, blog_user=blog_user)
 
 @blogs.route('/blog_maintenance')
 @login_required

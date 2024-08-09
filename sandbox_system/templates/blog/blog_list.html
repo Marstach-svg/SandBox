@@ -1,25 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <div class="container">
+    <div class="container pb-4">
         <div class="row my-3">
             <div class="col-md-6 m-auto text-center">
-                {% if search_text %}
-                    <h1 class="text-center">{{ search_text }}の検索一覧</h1>
+                {% if searchtext %}
+                    <h1 class="text-center">"{{ searchtext }}"の検索結果</h1>
                 {% elif blog_category %}
                     <h1 class="text-center">{{ blog_category.category }}</h1>
+                {% elif blog_user %}
+                    <h1>{{ blog_user.author.username }}のブログ</h1>
                 {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <div class="container my-3">
-        <div class="row row-cols-auto">
-            <div class="col">
-                <a href="{{ url_for('blogs.blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋ブログ作成</a>
-            </div>
-            <div class="col">
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
             </div>
         </div>
     </div>
@@ -27,6 +18,17 @@
     <div class="container">
         <div class="row">
             <div class="col-9">
+                <div class="container my-3">
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <a href="{{ url_for('blogs.blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋ブログ作成</a>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     {% for blog in blogs.items %}
                     <div class="col-6 mb-4">
@@ -37,7 +39,7 @@
                                             <img src="{{ url_for('static', filename='image/' + blog.image) }}" class="img-fluid card-image-top" style="max-height: 10rem;">
                                     </div>
                                 {% endif %}
-                                <h3 class="card-title">{{ blog.title }}</h3>
+                                <h3 class="card-title pt-2"><a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="text-decoration-none text-dark">{{ blog.title }}</a></h3>
                                 <hr>
                                 <p>{{ blog.date }} by {{ blog.author.username }}</p>
                                 <p>{{ blog.summary }}</p>
@@ -51,7 +53,7 @@
 
             <!-- サイドバー -->
             <div class="col-md-3">
-                <div class="position-sticky mt-2" style="top: 2rem;">
+                <div class="position-sticky mt-2" style="top: 12rem;">
                     <div class="container-fluid mb-5">
                         <form action="{{ url_for('blogs.search') }}" class="d-flex" method="post">
                             {{ form.hidden_tag() }}
@@ -101,7 +103,7 @@
         </div>
     </div>
 
-    <nav class="my-2" aria-label="Page navigation">
+    <nav class="my-5" aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <li {% if blogs.has_prev %} class="page-item" {%else%} class="page-item disabled" {% endif %}><a class="page-link" href="{% if blogs.has_prev %}{{ url_for('blogs.blog_list', page=blogs.prev_num) }}{% else %}#{% endif %}">前へ</a></li>
 

@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="position-sticky mt-2" style="top: 2rem;">
+            <div class="position-sticky mt-2" style="top: 9rem;">
                 <div class="container-fluid mb-5">
                     <form action="{{ url_for('blogs.search') }}" class="d-flex" method="post">
                         {{ form.hidden_tag() }}
@@ -32,12 +32,14 @@
                 <div class="container">
                     <h4>Category <span class="fs-6 ms-2">カテゴリ一覧</span></h4>
                     <hr>
+                    {% for blog_category in blog_categories %}
                     <ol class="list-unstyled">
                         <li>
-                            <a href="#" class="text-decoration-none">ハッカソン</a>
+                            <a href="{{ url_for('blogs.category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none">{{ blog_category.category }}</a>
                         </li>
                         <hr>
                     </ol>
+                    {% endfor %}
                 </div>
             </div>
         </div>

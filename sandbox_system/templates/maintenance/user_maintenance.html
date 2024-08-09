@@ -22,13 +22,13 @@
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                     <td><a href="#">ブログ投稿数</a></td>
-                    <td><a href="#" class="btn btn-secondary">詳細</a></td>
+                    <td><a href="{{ url_for('blogs.user_blog', user_id=user.id) }}" class="btn btn-secondary">詳細</a></td>
                 </tr>
                 </tbody>
                 {% endfor %}
             </table>
         </div>
     </div>
-        </div>
+</div>
 
 {% endblock %}
