@@ -22,6 +22,21 @@ def blog_list():
     blogs = Blog.query.order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     return render_template('blog/blog_list.html', form=form, blog_categories=blog_categories, blogs=blogs, category_form=category_form)
 
+@blogs.route('/sandbox_blog_list', methods=['GET', 'POST'])
+def sandbox_blog_list():
+    form = BlogSearchForm()
+    category_form = BlogCategoryForm()
+    if category_form.validate_on_submit():
+        new_category = BlogCategory(category=category_form.category.data)
+        db.session.add(new_category)
+        db.session.commit()
+        flash('カテゴリが追加されました')
+        return redirect(url_for('blogs.blog_list'))
+    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    page = request.args.get('page', 1, type=int)
+    blogs = Blog.query.order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+    return render_template('blog/sandbox_blog_list.html', form=form, blog_categories=blog_categories, blogs=blogs, category_form=category_form)
+
 @blogs.route('/blog_create', methods=['GET', 'POST'])
 @login_required
 def blog_create():
@@ -45,8 +60,8 @@ def blog(blog_id):
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
     return render_template('blog/blog.html', blog=blog, form=form, blog_categories=blog_categories)
 
-@blogs.route('/search', methods=['GET', 'POST'])
-def search():
+@blogs.route('/blog_search', methods=['GET', 'POST'])
+def blog_search():
     form = BlogSearchForm()
     category_form = BlogCategoryForm()
     searchtext = ''
@@ -66,6 +81,28 @@ def search():
     #カテゴリの取得
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
     return render_template('blog/blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext)
+
+@blogs.route('/sandbox_blog_search', methods=['GET', 'POST'])
+def sandbox_blog_search():
+    form = BlogSearchForm()
+    category_form = BlogCategoryForm()
+    searchtext = ''
+    if form.validate_on_submit():
+        searchtext = form.searchtext.data
+    elif request.method == 'GET':
+        form.searchtext.data == ''
+    if category_form.validate_on_submit():
+        new_category = BlogCategory(category=category_form.category.data)
+        db.session.add(new_category)
+        db.session.commit()
+        flash('カテゴリが追加されました')
+        return redirect(url_for('blogs.sandbox_blog_list'))
+    #ブログ記事の取得
+    page = request.args.get('page', 1, type=int)
+    blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+    #カテゴリの取得
+    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext)
 
 @blogs.route('/<int:blog_category_id>/category_blog', methods=['GET', 'POST'])
 def category_blog(blog_category_id):
