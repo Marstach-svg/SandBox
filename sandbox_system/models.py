@@ -63,6 +63,23 @@ class Blog(db.Model):
         self.category_id = category_id
 
 
+class OtherBlog(db.Model):
+    __tablename__ = 'otherblog'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(140))
+    summary = db.Column(db.String(140))
+    text = db.Column(db.Text)
+    url = db.Column(db.String(140))
+    image = db.Column(db.String(140))
+
+    def __init__(self, title, summary, text, image):
+        self.title = title
+        self.summary = summary
+        self.text = text
+        self.image = image
+
+
 class BlogCategory(db.Model):
     __tablename__ = 'blog_category'
 

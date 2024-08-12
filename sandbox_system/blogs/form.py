@@ -22,6 +22,14 @@ class BlogForm(FlaskForm):
         self._set_category()
 
 
+class OtherBlogForm(FlaskForm):
+    title = StringField('タイトル', validators=[DataRequired()])
+    summary = StringField('要約', validators=[DataRequired()])
+    text = TextAreaField('本文コピペ（検索用）', validators=[DataRequired()])
+    url = StringField('ページ先URL', validators=[DataRequired()])
+    picture = FileField('アイキャッチ画像', validators=[FileAllowed(['jpg', 'png'])])
+
+
 class BlogSearchForm(FlaskForm):
     searchtext = StringField('検索テキスト', validators=[DataRequired()])
     submit = SubmitField('🔍')

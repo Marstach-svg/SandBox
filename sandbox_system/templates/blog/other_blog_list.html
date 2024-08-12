@@ -6,10 +6,6 @@
             <div class="col-md-6 m-auto text-center">
                 {% if searchtext %}
                     <h1 class="text-center">"{{ searchtext }}"の検索結果</h1>
-                {% elif blog_category %}
-                    <h1 class="text-center">{{ blog_category.category }}</h1>
-                {% elif blog_user %}
-                    <h1>{{ blog_user.author.username }}のブログ</h1>
                 {% endif %}
             </div>
         </div>
@@ -19,35 +15,15 @@
         <div class="row">
             <div class="col-9">
                 <div class="container my-3">
-                    <div class="row row-cols-auto">
+                    <div class="row">
                         <div class="col">
-                            <a href="{{ url_for('blogs.blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋ブログ作成</a>
-                        </div>
-                        <div class="col">
-                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
+                            <a href="{{ url_for('blogs.other_blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋他サイトブログ追加</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    {% for blog in blogs.items %}
                     {% for otherblog in otherblogs.items %}
-                    <div class="col-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body" style="max-height: 26rem;">
-                                {% if blog.image %}
-                                    <div class="mb-3" style="text-align: center;">
-                                            <img src="{{ url_for('static', filename='image/' + blog.image) }}" class="img-fluid card-image-top" style="max-height: 10rem;">
-                                    </div>
-                                {% endif %}
-                                <h3 class="card-title pt-2"><a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="text-decoration-none text-dark">{{ blog.title }}</a></h3>
-                                <hr>
-                                <p>{{ blog.date }} by {{ blog.author.username }}</p>
-                                <p>{{ blog.summary }}</p>
-                                <a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="btn btn-secondary">続きを読む…</a>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-6 mb-4">
                         <div class="card h-100">
                             <div class="card-body" style="max-height: 26rem;">
@@ -64,7 +40,6 @@
                         </div>
                     </div>
                     {% endfor %}
-                    {% endfor %}
                 </div>
             </div>
 
@@ -72,23 +47,11 @@
             <div class="col-md-3">
                 <div class="position-sticky mt-2" style="top: 12rem;">
                     <div class="container-fluid mb-5">
-                        <form action="{{ url_for('blogs.blog_search') }}" class="d-flex" method="post">
+                        <form action="{{ url_for('blogs.other_blog_search') }}" class="d-flex" method="post">
                             {{ form.hidden_tag() }}
                             {{ render_field(form.searchtext, class="form-control", placeholder="検索テキストを入力") }}
                             {{ form.submit(class="btn btn-warning") }}
                         </form>
-                    </div>
-                    <div class="container">
-                        <h4>Category <span class="fs-6 ms-2">カテゴリ一覧</span></h4>
-                        <hr>
-                        {% for blog_category in blog_categories %}
-                        <ol class="list-unstyled">
-                            <li>
-                                <a href="{{ url_for('blogs.category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none">{{ blog_category.category }}</a>
-                            </li>
-                            <hr>
-                        </ol>
-                        {% endfor %}
                     </div>
                 </div>
             </div>

@@ -1,8 +1,8 @@
 from flask import Blueprint,render_template, url_for, redirect, abort, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from sandbox_system import db
-from sandbox_system.models import Blog, BlogCategory
-from sandbox_system.blogs.form import BlogForm, BlogSearchForm, BlogCategoryForm
+from sandbox_system.models import Blog, BlogCategory, OtherBlog
+from sandbox_system.blogs.form import BlogForm, BlogSearchForm, BlogCategoryForm, OtherBlogForm
 from sandbox_system.blogs.image import add_image
 
 blogs = Blueprint('blogs', __name__)
@@ -20,7 +20,8 @@ def blog_list():
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
     page = request.args.get('page', 1, type=int)
     blogs = Blog.query.order_by(Blog.id.desc()).paginate(page=page, per_page=10)
-    return render_template('blog/blog_list.html', form=form, blog_categories=blog_categories, blogs=blogs, category_form=category_form)
+    otherblogs = OtherBlog.query.order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
+    return render_template('blog/blog_list.html', form=form, blog_categories=blog_categories, blogs=blogs, otherblogs=otherblogs, category_form=category_form)
 
 @blogs.route('/sandbox_blog_list', methods=['GET', 'POST'])
 def sandbox_blog_list():
@@ -37,6 +38,13 @@ def sandbox_blog_list():
     blogs = Blog.query.order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     return render_template('blog/sandbox_blog_list.html', form=form, blog_categories=blog_categories, blogs=blogs, category_form=category_form)
 
+@blogs.route('/other_blog_list', methods=['GET', 'POST'])
+def other_blog_list():
+    form = BlogSearchForm()
+    page = request.args.get('page', 1, type=int)
+    otherblogs = OtherBlog.query.order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
+    return render_template('blog/other_blog_list.html', form=form, otherblogs=otherblogs)
+
 @blogs.route('/blog_create', methods=['GET', 'POST'])
 @login_required
 def blog_create():
@@ -52,6 +60,22 @@ def blog_create():
         flash('ブログを投稿しました')
         return redirect(url_for('blogs.blog_list'))
     return render_template('blog/blog_create.html', form=form)
+
+@blogs.route('/other_blog_create', methods=['GET', 'POST'])
+@login_required
+def other_blog_create():
+    form = OtherBlogForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture = add_image(form.picture.data)
+        else:
+            picture = ''
+        otherblog = OtherBlog(title=form.title.data, summary=form.summary.data, url=form.url.data, image=picture)
+        db.session.add(otherblog)
+        db.session.commit()
+        flash('ブログを追加しました')
+        return redirect(url_for('blogs.other_blog_list'))
+    return render_template('blog/other_blog_create.html', form=form)
 
 @blogs.route('/<int:blog_id>/blog')
 def blog(blog_id):
@@ -78,9 +102,10 @@ def blog_search():
     #ブログ記事の取得
     page = request.args.get('page', 1, type=int)
     blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+    otherblogs = OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
     #カテゴリの取得
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
-    return render_template('blog/blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext)
+    return render_template('blog/blog_list.html', blogs=blogs, otherblogs=otherblogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext)
 
 @blogs.route('/sandbox_blog_search', methods=['GET', 'POST'])
 def sandbox_blog_search():
@@ -102,7 +127,21 @@ def sandbox_blog_search():
     blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     #カテゴリの取得
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
-    return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext)
+    return render_template('blog/blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext)
+
+@blogs.route('/other_blog_search', methods=['GET', 'POST'])
+def other_blog_search():
+    form = BlogSearchForm()
+    searchtext = ''
+    if form.validate_on_submit():
+        searchtext = form.searchtext.data
+    elif request.method == 'GET':
+        form.searchtext.data == ''
+    #ブログ記事の取得
+    page = request.args.get('page', 1, type=int)
+    otherblogs = OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
+    #カテゴリの取得
+    return render_template('blog/other_blog_list.html', otherblogs=otherblogs, form=form, searchtext=searchtext)
 
 @blogs.route('/<int:blog_category_id>/category_blog', methods=['GET', 'POST'])
 def category_blog(blog_category_id):
