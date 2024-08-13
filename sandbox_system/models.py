@@ -4,9 +4,11 @@ from flask_login import UserMixin
 
 from sandbox_system import db, login_manager
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -69,15 +71,18 @@ class OtherBlog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140))
     summary = db.Column(db.String(140))
+    category_id = db.Column(db.Integer, db.ForeignKey('blog_category.id'))
     text = db.Column(db.Text)
     url = db.Column(db.String(140))
     image = db.Column(db.String(140))
 
-    def __init__(self, title, summary, text, image):
+    def __init__(self, title, summary, url, text, image, category_id):
         self.title = title
         self.summary = summary
+        self.url = url
         self.text = text
         self.image = image
+        self.category_id = category_id
 
 
 class BlogCategory(db.Model):
@@ -86,6 +91,7 @@ class BlogCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(140))
     blogs = db.relationship('Blog', backref='blogcategory', lazy='dynamic')
+    otherblogs = db.relationship('OtherBlog', backref='blogcategory', lazy='dynamic')
 
     def __init__(self, category):
         self.category = category

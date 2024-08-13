@@ -31,7 +31,6 @@
 
                 <div class="row">
                     {% for blog in blogs.items %}
-                    {% for otherblog in otherblogs.items %}
                     <div class="col-6 mb-4">
                         <div class="card h-100">
                             <div class="card-body" style="max-height: 26rem;">
@@ -48,6 +47,8 @@
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
+                    {% for otherblog in otherblogs.items %}
                     <div class="col-6 mb-4">
                         <div class="card h-100">
                             <div class="card-body" style="max-height: 26rem;">
@@ -63,7 +64,6 @@
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                     {% endfor %}
                 </div>
             </div>
