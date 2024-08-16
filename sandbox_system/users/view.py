@@ -50,11 +50,6 @@ def index():
 def my_page():
     return render_template('user/my_page/profile.html')
 
-@users.route('/favorite')
-@login_required
-def favorite():
-    return render_template('user/my_page/favorite.html')
-
 @users.route('/my_blog')
 @login_required
 def my_blog():

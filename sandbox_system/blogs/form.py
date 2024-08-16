@@ -52,3 +52,6 @@ class BlogCategoryForm(FlaskForm):
     def validater_category(self, field):
         if BlogCategory.query.order_by(category=field.data).first():
             raise ValidationError('入力されたカテゴリ名はすでに使われています')
+
+class BlogFavoriteForm(FlaskForm):
+    submit = SubmitField('♡')

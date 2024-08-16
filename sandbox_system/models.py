@@ -95,3 +95,14 @@ class BlogCategory(db.Model):
 
     def __init__(self, category):
         self.category = category
+
+class BlogFavorite(db.Model):
+    __tablename__ = 'blog_favorite'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'))
+
+    def __init__(self, user_id, blog_id):
+        self.user_id = user_id
+        self.blog_id = blog_id

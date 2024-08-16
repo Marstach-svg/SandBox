@@ -1,0 +1,19 @@
+.btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	background: #aaa;
+	color: #fff;
+	border-radius:50%;
+	font-size: 1.0rem;
+	cursor: pointer;
+}
+.checkbox {
+	display: none;
+}
+/*以下を追記*/
+.checkbox:checked+.btn {
+	background: #D31A57;
+}

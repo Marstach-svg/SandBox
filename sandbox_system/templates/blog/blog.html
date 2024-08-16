@@ -3,13 +3,26 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-9">
+        <div class="col-1">
+            {% if favorite_blog %}
+            <form action="{{ url_for('blogs.blog_favorite_delete', blog_id=blog_id) }}">
+                {{ favorite_form.hidden_tag() }}
+                {{ favorite_form.submit(class='btn btn-danger')}}
+            </form>
+            {% else %}
+            <form action="{{ url_for('blogs.blog_favorite', blog_id=blog_id) }}">
+                {{ favorite_form.hidden_tag() }}
+                {{ favorite_form.submit(class='btn btn-light') }}
+            </form>
+            {% endif %}
+        </div>
+        <div class="col-8">
             <div class="card mb-5">
                 <div class="container">
                     <div class="container text-center my-5">
                         <h1>{{ blog.title }}</h1>
                         <hr>
-                        <p>{{ blog.date }} : {{ blog.author.username }} : {{ blog.blogcategory.category }}</p>
+                        <p>{{ blog.date }} : <a href="{{ url_for('blogs.user_blog', user_id=blog.user_id) }}" class="text-decoration-none">{{ blog.author.username }}</a> : {{ blog.blogcategory.category }}</p>
                     </div>
                     {% if blog.image %}
                     <div class="mb-3" style="text-align: center;">
@@ -21,12 +34,12 @@
             </div>
         </div>
         <div class="col-md-3">
-        <div class="position-sticky mt-2" style="top: 9rem;">
+            <div class="position-sticky mt-2" style="top: 9rem;">
                 <div class="container-fluid mb-5">
                     <form action="{{ url_for('blogs.blog_search') }}" class="d-flex" method="post">
                         {{ form.hidden_tag() }}
                         {{ render_field(form.searchtext, class="form-control", placeholder="検索テキストを入力") }}
-                        {{ form.submit (class="btn btn-warning") }}
+                        {{ form.submit(class="btn btn-warning") }}
                     </form>
                 </div>
                 <div class="container">
