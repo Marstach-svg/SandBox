@@ -14,6 +14,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('ユーザーが登録されました')
+        login_user(user)
         return redirect(url_for('users.index'))
     return render_template('user/register.html', form=form)
 
