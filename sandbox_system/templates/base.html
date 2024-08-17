@@ -22,6 +22,24 @@
                             </button>
                             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                                 <ul class="navbar-nav ms-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link active text-warning mx-2" aria-current="page" href="{{ url_for('users.index') }}">Home</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-warning" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Blog
+                                    </a>
+                                    <ul class="dropdown-menu bg-warning">
+                                    <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.sandbox_blog_list') }}">SandBox</a></li>
+                                    <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.other_blog_list') }}">Others</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-warning mx-2" href="{{ url_for('chats.chat_index') }}">Chat</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-warning mx-2" href="#">Event</a>
+                                </li>
                                 {% if current_user.is_authenticated %}
                                     {% if current_user.is_administrator() %}
                                         <li class="nav-item dropdown">
@@ -34,27 +52,12 @@
                                             <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.category_maintenance') }}">Category</a></li>
                                             </ul>
                                         </li>
+                                    {% else %}
+                                        <li>
+                                            <a class="nav-link active text-warning mx-2" aria-current="page" href="#">User</a>
+                                        </li>
                                     {% endif %}
                                 {% endif %}
-                                <li class="nav-item">
-                                    <a class="nav-link active text-warning mx-2" aria-current="page" href="{{ url_for('users.index') }}">Home</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-warning" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Blog
-                                    </a>
-                                    <ul class="dropdown-menu bg-warning">
-                                    <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.blog_list') }}">All</a></li>
-                                    <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.sandbox_blog_list') }}">SandBox</a></li>
-                                    <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.other_blog_list') }}">Others</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-warning mx-2" href="{{ url_for('chats.chat_index') }}">Chat</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-warning mx-2" href="#">Event</a>
-                                </li>
                                 {% if current_user.is_authenticated %}
                                     <li class="nav-item">
                                         <a class="nav-link text-warning mx-2 me-5" href="{{ url_for('users.my_page') }}">MyPage</a>
@@ -76,7 +79,7 @@
         {% from '_formhelper.html' import render_field %}
         <!-- 要チェック -->
         {% if get_flashed_messages() %}
-            <div class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+            <div class="container">
                 {% for message in get_flashed_messages() %}
                 <div class="alert alert-dark alert-dismissible fade show text-light" role="alert">
                     {{ message }}

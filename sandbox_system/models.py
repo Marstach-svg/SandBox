@@ -85,6 +85,28 @@ class OtherBlog(db.Model):
         self.category_id = category_id
 
 
+class BlogFavorite(db.Model):
+    __tablename__ = 'blog_favorite'
+
+    id = db.Column(db.Integer, primary_key=True)
+    favorite_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'))
+    category_id = db.Column(db.Integer, db.ForeignKey('blog_category.id'))
+    title = db.Column(db.String(140))
+    text = db.Column(db.Text)
+    summary = db.Column(db.String(140))
+    image = db.Column(db.String(140))
+
+    def __init__(self, title, text, summary, image, favorite_user_id, blog_id, category_id):
+        self.title = title
+        self.text = text
+        self.summary = summary
+        self.favorite_user_id = favorite_user_id
+        self.blog_id = blog_id
+        self.image = image
+        self.category_id = category_id
+
+
 class BlogCategory(db.Model):
     __tablename__ = 'blog_category'
 
@@ -95,14 +117,3 @@ class BlogCategory(db.Model):
 
     def __init__(self, category):
         self.category = category
-
-class BlogFavorite(db.Model):
-    __tablename__ = 'blog_favorite'
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'))
-
-    def __init__(self, user_id, blog_id):
-        self.user_id = user_id
-        self.blog_id = blog_id

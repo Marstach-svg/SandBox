@@ -6,8 +6,13 @@
             <div class="col-md-6 m-auto text-center">
                 {% if searchtext %}
                     <h1 class="text-center">"{{ searchtext }}"の検索結果</h1>
+                    <hr>
                 {% elif blog_category %}
                     <h1 class="text-center">{{ blog_category.category }}</h1>
+                    <hr>
+                {% else %}
+                    <h1>Blog <span class="fs-5 ms-2 fst-italic">Others</span></h1>
+                    <hr>
                 {% endif %}
             </div>
         </div>
@@ -16,18 +21,8 @@
     <div class="container">
         <div class="row">
             <div class="col-9">
-                <div class="container my-3">
-                    <div class="row row-cols-auto">
-                        <div class="col">
-                            <a href="{{ url_for('blogs.other_blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋他サイトブログ追加</a>
-                        </div>
-                        <div class="col">
-                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="row">
+                    {% if otherblogs %}
                     {% for otherblog in otherblogs.items %}
                     <div class="col-6 mb-4">
                         <div class="card h-100">
@@ -45,12 +40,15 @@
                         </div>
                     </div>
                     {% endfor %}
+                    {% else %}
+                    <p class="text-center my-3">ブログがありません</p>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- サイドバー -->
             <div class="col-md-3">
-                <div class="position-sticky mt-2" style="top: 12rem;">
+                <div class="position-sticky" style="top: 12rem;">
                     <div class="container-fluid mb-5">
                         <form action="{{ url_for('blogs.other_blog_search') }}" class="d-flex" method="post">
                             {{ form.hidden_tag() }}
@@ -58,8 +56,20 @@
                             {{ form.submit(class="btn btn-warning") }}
                         </form>
                     </div>
-                    <div class="container">
-                        <h4>Category <span class="fs-6 ms-2">カテゴリ一覧</span></h4>
+                    <div class="container pb-4">
+                        <h4>Add <span class="fs-6 ms-2 fst-italic">ブログ・カテゴリ追加</span></h4>
+                        <hr>
+                        <div class="row row-cols-auto">
+                            <div class="col">
+                                <a href="{{ url_for('blogs.other_blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋他ブログ追加</a>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container py-3">
+                        <h4>Category <span class="fs-6 ms-2 fst-italic">カテゴリ一覧</span></h4>
                         <hr>
                         {% for blog_category in blog_categories %}
                         <ol class="list-unstyled">
@@ -100,26 +110,28 @@
         </div>
     </div>
 
-    <nav class="my-5" aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <li {% if otherblogs.has_prev %} class="page-item" {%else%} class="page-item disabled" {% endif %}><a class="page-link" href="{% if otherblogs.has_prev %}{{ url_for('blogs.other_blog_list', page=otherblogs.prev_num) }}{% else %}#{% endif %}">前へ</a></li>
+    {% if otherblogs %}
+        <nav class="my-5" aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li {% if otherblogs.has_prev %} class="page-item" {%else%} class="page-item disabled" {% endif %}><a class="page-link" href="{% if otherblogs.has_prev %}{{ url_for('blogs.other_blog_list', page=otherblogs.prev_num) }}{% else %}#{% endif %}">前へ</a></li>
 
-    {% for page_num in otherblogs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-        <!--ページ番号が表記されている場合（左右の端1つずつと現在のページとその両隣）-->
-        {% if page_num %}
-            {% if otherblogs.page == page_num %}
-                <li class="page-item disabled"><a class="page-link" href="#">{{ page_num }}</a></li>
+        {% for page_num in otherblogs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            <!--ページ番号が表記されている場合（左右の端1つずつと現在のページとその両隣）-->
+            {% if page_num %}
+                {% if otherblogs.page == page_num %}
+                    <li class="page-item disabled"><a class="page-link" href="#">{{ page_num }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('blogs.other_blog_list', page=page_num) }}">{{ page_num }}</a></li>
+                {% endif %}
+            <!--ページ番号が表記されていない場合-->
             {% else %}
-                <li class="page-item"><a class="page-link" href="{{ url_for('blogs.other_blog_list', page=page_num) }}">{{ page_num }}</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
             {% endif %}
-        <!--ページ番号が表記されていない場合-->
-        {% else %}
-            <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
-        {% endif %}
-    {% endfor %}
+        {% endfor %}
 
-        <li {% if otherblogs.has_next %} class="page-item" {% else %} class="page-item disabled" {% endif %}><a class="page-link" href="{% if otherblogs.has_next %}{{ url_for('blogs.other_blog_list',page=otherblogs.next_num) }}{% else %}#{% endif %}">次へ</a></li>
-        </ul>
-    </nav>
+            <li {% if otherblogs.has_next %} class="page-item" {% else %} class="page-item disabled" {% endif %}><a class="page-link" href="{% if otherblogs.has_next %}{{ url_for('blogs.other_blog_list',page=otherblogs.next_num) }}{% else %}#{% endif %}">次へ</a></li>
+            </ul>
+        </nav>
+    {% endif %}
 
 {% endblock %}

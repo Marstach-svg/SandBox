@@ -8,8 +8,6 @@
                     <h1 class="text-center">"{{ searchtext }}"の検索結果</h1>
                 {% elif blog_category %}
                     <h1 class="text-center">{{ blog_category.category }}</h1>
-                {% elif blog_user %}
-                    <h1>{{ blog_user.author.username }}のブログ</h1>
                 {% else %}
                     <h1 class="text-center">Favorite</h1>
                 {% endif %}
@@ -50,9 +48,8 @@
                                 {% endif %}
                                 <h3 class="card-title pt-2"><a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="text-decoration-none text-dark">{{ blog.title }}</a></h3>
                                 <hr>
-                                <p>{{ blog.date }} by {{ blog.author.username }}</p>
                                 <p>{{ blog.summary }}</p>
-                                <a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="btn btn-secondary">続きを読む…</a>
+                                <a href="{{ url_for('blogs.blog', blog_id=blog.blog_id) }}" class="btn btn-secondary">続きを読む…</a>
                             </div>
                         </div>
                     </div>

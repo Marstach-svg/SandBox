@@ -36,7 +36,7 @@
         <div class="col-md-3">
             <div class="position-sticky mt-2" style="top: 9rem;">
                 <div class="container-fluid mb-5">
-                    <form action="{{ url_for('blogs.blog_search') }}" class="d-flex" method="post">
+                    <form action="{{ url_for('blogs.sandbox_blog_search') }}" class="d-flex" method="post">
                         {{ form.hidden_tag() }}
                         {{ render_field(form.searchtext, class="form-control", placeholder="検索テキストを入力") }}
                         {{ form.submit(class="btn btn-warning") }}
@@ -48,7 +48,7 @@
                     {% for blog_category in blog_categories %}
                     <ol class="list-unstyled">
                         <li>
-                            <a href="{{ url_for('blogs.category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none">{{ blog_category.category }}</a>
+                            <a href="{{ url_for('blogs.sandbox_category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none">{{ blog_category.category }}</a>
                         </li>
                         <hr>
                     </ol>

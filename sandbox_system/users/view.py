@@ -32,7 +32,7 @@ def login():
             else:
                 flash('パスワードが一致しません')
         else:
-            flash('入力されたユーザーは存在しません')
+            flash('入力されたユーザーは登録されていません')
     return render_template('user/login.html', form=form)
 
 @users.route('/logout')
