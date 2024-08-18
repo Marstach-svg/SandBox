@@ -84,6 +84,22 @@ def my_favorite_list():
         blogs = ''
     return render_template('user/my_page/my_favorite.html', form=form, blog_categories=blog_categories, blogs=blogs)
 
+#自分のブログ一覧
+@blogs.route('/my_blog_list', methods=['GET', 'POST'])
+@login_required
+def my_blog_list():
+    form = BlogSearchForm()
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
+    page = request.args.get('page', 1, type=int)
+    if Blog.query.filter_by(user_id=current_user.id).first():
+        blogs = Blog.query.filter_by(user_id=current_user.id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+    else:
+        blogs = ''
+    return render_template('user/my_page/my_blog.html', form=form, blog_categories=blog_categories, blogs=blogs)
+
 #sandboxブログ作成ページ
 @blogs.route('/blog_create', methods=['GET', 'POST'])
 @login_required
@@ -169,26 +185,6 @@ def sandbox_blog_search():
         recent_other_blogs = ''
     return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext, recent_other_blogs=recent_other_blogs)
 
-#お気に入りブログ内検索
-@blogs.route('/favorite_blog_search', methods=['GET', 'POST'])
-def favorite_blog_search():
-    form = BlogSearchForm()
-    searchtext = ''
-    if form.validate_on_submit():
-        searchtext = form.searchtext.data
-    elif request.method == 'GET':
-        form.searchtext.data == ''
-    page = request.args.get('page', 1, type=int)
-    if BlogCategory.query.first():
-        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
-    else:
-        blog_categories = ''
-    if BlogFavorite.query.filter_by(favorite_user_id=current_user.id).first():
-        blogs = BlogFavorite.query.filter_by(favorite_user_id=current_user.id).filter((BlogFavorite.text.contains(searchtext)) | (BlogFavorite.title.contains(searchtext)) | (BlogFavorite.summary.contains(searchtext))).order_by(BlogFavorite.id.desc()).paginate(page=page, per_page=10)
-    else:
-        blogs = ''
-    return render_template('user/my_page/my_favorite.html', form=form, blog_categories=blog_categories, blogs=blogs, searchtext=searchtext)
-
 #他サイトブログ検索
 @blogs.route('/other_blog_search', methods=['GET', 'POST'])
 def other_blog_search():
@@ -219,6 +215,46 @@ def other_blog_search():
     else:
         recent_blogs = ''
     return render_template('blog/other_blog_list.html', otherblogs=otherblogs, form=form, category_form=category_form, searchtext=searchtext, blog_categories=blog_categories, recent_blogs=recent_blogs)
+
+#お気に入りブログ内検索
+@blogs.route('/favorite_blog_search', methods=['GET', 'POST'])
+def favorite_blog_search():
+    form = BlogSearchForm()
+    searchtext = ''
+    if form.validate_on_submit():
+        searchtext = form.searchtext.data
+    elif request.method == 'GET':
+        form.searchtext.data == ''
+    page = request.args.get('page', 1, type=int)
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
+    if BlogFavorite.query.filter_by(favorite_user_id=current_user.id).first():
+        blogs = BlogFavorite.query.filter_by(favorite_user_id=current_user.id).filter((BlogFavorite.text.contains(searchtext)) | (BlogFavorite.title.contains(searchtext)) | (BlogFavorite.summary.contains(searchtext))).order_by(BlogFavorite.id.desc()).paginate(page=page, per_page=10)
+    else:
+        blogs = ''
+    return render_template('user/my_page/my_favorite.html', form=form, blog_categories=blog_categories, blogs=blogs, searchtext=searchtext)
+
+#自分のブログ内検索
+@blogs.route('/my_blog_search', methods=['GET', 'POST'])
+def my_blog_search():
+    form = BlogSearchForm()
+    searchtext = ''
+    if form.validate_on_submit():
+        searchtext = form.searchtext.data
+    elif request.method == 'GET':
+        form.searchtext.data == ''
+    page = request.args.get('page', 1, type=int)
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
+    if Blog.query.filter_by(user_id=current_user.id).first():
+        blogs = Blog.query.filter_by(user_id=current_user.id).filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+    else:
+        blogs = ''
+    return render_template('user/my_page/my_blog.html', form=form, blog_categories=blog_categories, blogs=blogs, searchtext=searchtext)
 
 #sandboxブログでカテゴリ検索
 @blogs.route('/<int:blog_category_id>/sandbox_category_blog', methods=['GET', 'POST'])
@@ -280,6 +316,19 @@ def favorite_category_blog(blog_category_id):
     else:
         blogs = ''
     return render_template('user/my_page/my_favorite.html', blogs=blogs, blog_categories=blog_categories, form=form, blog_category=blog_category)
+
+#自分のブログでカテゴリ検索
+@blogs.route('/<int:blog_category_id>/my_category_blog', methods=['GET', 'POST'])
+def my_category_blog(blog_category_id):
+    form = BlogSearchForm()
+    blog_category = BlogCategory.query.filter_by(id=blog_category_id).first()
+    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    page = request.args.get('page', 1, type=int)
+    if Blog.query.filter_by(user_id=current_user.id).first():
+        blogs = Blog.query.filter_by(user_id=current_user.id).filter_by(category_id=blog_category_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+    else:
+        blogs = ''
+    return render_template('user/my_page/my_blog.html', blogs=blogs, blog_categories=blog_categories, form=form, blog_category=blog_category)
 
 #著者検索（sandboxブログ）
 @blogs.route('/<int:user_id>/user_blog', methods=['GET', 'POST'])
