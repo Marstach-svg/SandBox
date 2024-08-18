@@ -11,9 +11,9 @@
 </head>
 <body>
     <div class="bg-warning-subtle">
-        <div class="position-sticky" style="top: 1rem;">
+        <div class="z-3 position-sticky" style="top: 0rem;">
             <header class="mb-5">
-                <div class="container-fluid">
+                <div class="container-fluid z-3">
                     <nav class="navbar navbar-expand-lg bg-dark form-control form-control-lg mt-3">
                         <div class="container-fluid">
                             <a class="navbar-brand ms-5 text-warning" href="{{ url_for('users.index') }}">SandBox</a>
@@ -48,7 +48,8 @@
                                             </a>
                                             <ul class="dropdown-menu bg-warning">
                                             <li><a class="dropdown-item text-dark" href="{{ url_for('users.user_maintenance') }}">User</a></li>
-                                            <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.blog_maintenance') }}">Blog</a></li>
+                                            <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.sandbox_blog_maintenance') }}">Blog(SandBox)</a></li>
+                                            <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.other_blog_maintenance') }}">Blog(Others)</a></li>
                                             <li><a class="dropdown-item text-dark" href="{{ url_for('blogs.category_maintenance') }}">Category</a></li>
                                             </ul>
                                         </li>

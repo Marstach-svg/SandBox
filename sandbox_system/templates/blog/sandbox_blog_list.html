@@ -73,6 +73,30 @@
                         </div>
                     </div>
                     <div class="container py-3">
+                        <h4>Others <span class="fs-6 ms-2 fst-italic">おすすめ他サイトブログ</span></h4>
+                        <hr>
+                        {% if recent_other_blogs %}
+                        {% for recent_other_blog in recent_other_blogs %}
+                        <div class="col mb-3">
+                            <div class="card h-100">
+                                <div class="card-body" style="max-height: 13rem;">
+                                    {% if recent_other_blog.image %}
+                                        <div style="text-align: center;">
+                                                <img src="{{ url_for('static', filename='image/' + recent_other_blog.image) }}" class="img-fluid card-image-top" style="max-height: 5rem;">
+                                        </div>
+                                    {% endif %}
+                                    <hr>
+                                    <h5 class="card-title"><a href="{{ recent_other_blog.url }}" class="text-decoration-none text-dark">{{ recent_other_blog.title }}</a></h5>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <p class="text-center my-3">ブログがありません</p>
+                        {% endif %}
+                    </div>
+                    <div class="container py-3">
                         <h4>Category <span class="fs-6 ms-2 fst-italic">カテゴリ一覧</span></h4>
                         <hr>
                         {% if blog_categories %}

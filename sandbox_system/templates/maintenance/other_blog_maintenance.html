@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="card">
+            <h1 class="text-center my-5">ブログ管理</h1>
+            <table class="table mb-5">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>タイトル</th>
+                    <th></th>
+                </tr>
+                </thead>
+                {% if otherblogs %}
+                {% for otherblog in otherblogs.items %}
+                <tbody>
+                <tr>
+                    <td>{{ otherblog.id }}</td>
+                    <td>{{ otherblog.title }}</td>
+                    <td><a href="{{ otherblog.url }}" class="btn btn-secondary">詳細</a></td>
+                </tr>
+                </tbody>
+                {% endfor %}
+                {% else %}
+                <tbody>
+                    <tr>
+                        <td>
+                            ブログがありません
+                        </td>
+                    </tr>
+                </tbody>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+
+<nav class="my-5" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li {% if otherblogs.has_prev %} class="page-item" {%else%} class="page-item disabled" {% endif %}><a class="page-link" href="{% if otherblogs.has_prev %}{{ url_for('blogs.other_blog_maintenance', page=otherblogs.prev_num) }}{% else %}#{% endif %}">前へ</a></li>
+
+{% for page_num in otherblogs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    <!--ページ番号が表記されている場合（左右の端1つずつと現在のページとその両隣）-->
+    {% if page_num %}
+        {% if otherblogs.page == page_num %}
+            <li class="page-item disabled"><a class="page-link" href="#">{{ page_num }}</a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('blogs.other_blog_maintenance', page=page_num) }}">{{ page_num }}</a></li>
+        {% endif %}
+    <!--ページ番号が表記されていない場合-->
+    {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+    {% endif %}
+{% endfor %}
+
+    <li {% if otherblogs.has_next %} class="page-item" {% else %} class="page-item disabled" {% endif %}><a class="page-link" href="{% if otherblogs.has_next %}{{ url_for('blogs.other_blog_maintenance',page=otherblogs.next_num) }}{% else %}#{% endif %}">次へ</a></li>
+    </ul>
+</nav>
+
+{% endblock %}

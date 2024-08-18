@@ -10,7 +10,8 @@
                 <tr>
                     <th>id</th>
                     <th>カテゴリ名</th>
-                    <th></th>
+                    <th>sandbox</th>
+                    <th>others</th>
                 </tr>
                 </thead>
                 {% for category in categories.items %}
@@ -18,7 +19,8 @@
                 <tr>
                     <td>{{ category.id }}</td>
                     <td>{{ category.category }}</td>
-                    <td><a href="{{ url_for('blogs.category_blog', blog_category_id=category.id) }}" class="btn btn-secondary">詳細</a></td>
+                    <td><a href="{{ url_for('blogs.sandbox_category_blog', blog_category_id=category.id) }}" class="btn btn-secondary">詳細</a></td>
+                    <td><a href="{{ url_for('blogs.other_category_blog', blog_category_id=category.id) }}" class="btn btn-secondary">詳細</a></td>
                 </tr>
                 </tbody>
                 {% endfor %}

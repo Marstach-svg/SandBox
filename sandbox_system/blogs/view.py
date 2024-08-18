@@ -32,7 +32,11 @@ def sandbox_blog_list():
         blogs = Blog.query.order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     else:
         blogs = ''
-    return render_template('blog/sandbox_blog_list.html', form=form, blog_categories=blog_categories, blogs=blogs, category_form=category_form)
+    if OtherBlog.query.first():
+        recent_other_blogs = OtherBlog.query.order_by(OtherBlog.id.desc()).limit(3).all()
+    else:
+        recent_other_blogs = ''
+    return render_template('blog/sandbox_blog_list.html', form=form, blog_categories=blog_categories, blogs=blogs, category_form=category_form, recent_other_blogs=recent_other_blogs)
 
 #他サイトブログの一覧ページ
 @blogs.route('/other_blog_list', methods=['GET', 'POST'])
@@ -58,7 +62,11 @@ def other_blog_list():
         otherblogs = OtherBlog.query.order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
     else:
         otherblogs = ''
-    return render_template('blog/other_blog_list.html', form=form, otherblogs=otherblogs, blog_categories=blog_categories, category_form=category_form)
+    if Blog.query.first():
+        recent_blogs = Blog.query.order_by(Blog.id.desc()).limit(3).all()
+    else:
+        recent_blogs = ''
+    return render_template('blog/other_blog_list.html', form=form, otherblogs=otherblogs, blog_categories=blog_categories, category_form=category_form, recent_blogs=recent_blogs)
 
 #お気に入り一覧
 @blogs.route('/my_favorite_list', methods=['GET', 'POST'])
@@ -124,7 +132,11 @@ def blog(blog_id):
         favorite_blog = BlogFavorite.query.filter_by(favorite_user_id=current_user.id, blog_id=blog_id).first()
     else:
         favorite_blog = ''
-    return render_template('blog/blog.html', blog=blog, form=form, favorite_form=favorite_form, blog_categories=blog_categories, blog_id=blog_id, favorite_blog=favorite_blog)
+    if Blog.query.first():
+        recent_blogs = Blog.query.order_by(Blog.id.desc()).limit(3).all()
+    else:
+        recent_blogs = ''
+    return render_template('blog/blog.html', blog=blog, form=form, favorite_form=favorite_form, blog_categories=blog_categories, blog_id=blog_id, favorite_blog=favorite_blog, recent_blogs=recent_blogs)
 
 #sandboxブログ検索
 @blogs.route('/sandbox_blog_search', methods=['GET', 'POST'])
@@ -151,7 +163,11 @@ def sandbox_blog_search():
         blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
     else:
         blog_categories = ''
-    return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext)
+    if OtherBlog.query.first():
+        recent_other_blogs = OtherBlog.query.order_by(OtherBlog.id.desc()).limit(3).all()
+    else:
+        recent_other_blogs = ''
+    return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext, recent_other_blogs=recent_other_blogs)
 
 #お気に入りブログ内検索
 @blogs.route('/favorite_blog_search', methods=['GET', 'POST'])
@@ -192,7 +208,11 @@ def other_blog_search():
         blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
     else:
         blog_categories = ''
-    return render_template('blog/other_blog_list.html', otherblogs=otherblogs, form=form, category_form=category_form, searchtext=searchtext, blog_categories=blog_categories)
+    if Blog.query.first():
+        recent_blogs = Blog.query.order_by(Blog.id.desc()).limit(3).all()
+    else:
+        recent_blogs = ''
+    return render_template('blog/other_blog_list.html', otherblogs=otherblogs, form=form, category_form=category_form, searchtext=searchtext, blog_categories=blog_categories, recent_blogs=recent_blogs)
 
 #sandboxブログでカテゴリ検索
 @blogs.route('/<int:blog_category_id>/sandbox_category_blog', methods=['GET', 'POST'])
@@ -212,7 +232,11 @@ def sandbox_category_blog(blog_category_id):
     else:
         blogs = ''
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
-    return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, blog_category=blog_category)
+    if OtherBlog.query.first():
+        recent_other_blogs = OtherBlog.query.order_by(OtherBlog.id.desc()).limit(3).all()
+    else:
+        recent_other_blogs = ''
+    return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, blog_category=blog_category, recent_other_blogs=recent_other_blogs)
 
 #他サイトブログでカテゴリ検索
 @blogs.route('/<int:blog_category_id>/other_category_blog', methods=['GET', 'POST'])
@@ -232,7 +256,11 @@ def other_category_blog(blog_category_id):
     else:
         otherblogs = ''
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
-    return render_template('blog/other_blog_list.html', otherblogs=otherblogs, blog_categories=blog_categories, form=form, category_form=category_form, blog_category=blog_category)
+    if Blog.query.first():
+        recent_blogs = Blog.query.order_by(Blog.id.desc()).limit(3).all()
+    else:
+        recent_blogs = ''
+    return render_template('blog/other_blog_list.html', otherblogs=otherblogs, blog_categories=blog_categories, form=form, category_form=category_form, blog_category=blog_category, recent_blogs=recent_blogs)
 
 #お気に入りブログでカテゴリ検索
 @blogs.route('/<int:blog_category_id>/favorite_category_blog', methods=['GET', 'POST'])
@@ -245,7 +273,7 @@ def favorite_category_blog(blog_category_id):
         blogs = BlogFavorite.query.filter_by(favorite_user_id=current_user.id).filter_by(category_id=blog_category_id).order_by(BlogFavorite.id.desc()).paginate(page=page, per_page=10)
     else:
         blogs = ''
-    return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, blog_category=blog_category)
+    return render_template('user/my_page/my_favorite.html', blogs=blogs, blog_categories=blog_categories, form=form, blog_category=blog_category)
 
 #著者検索（sandboxブログ）
 @blogs.route('/<int:user_id>/user_blog', methods=['GET', 'POST'])
@@ -268,7 +296,11 @@ def user_blog(user_id):
         blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
     else:
         blog_categories = ''
-    return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, blog_user=blog_user)
+    if OtherBlog.query.first():
+        recent_other_blogs = OtherBlog.query.order_by(OtherBlog.id.desc()).limit(3).all()
+    else:
+        recent_other_blogs = ''
+    return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, blog_user=blog_user, recent_other_blogs=recent_other_blogs)
 
 #ブログお気に入り登録
 @blogs.route('/<int:blog_id>/blog_favorite', methods=['GET', 'POST'])
@@ -298,15 +330,31 @@ def blog_favorite_delete(blog_id):
         return redirect(url_for('blogs.blog', blog_id=blog_id))
     return redirect(url_for('blogs.blog', blog_id=blog_id))
 
-#ブログ管理
-@blogs.route('/blog_maintenance')
+#sandboxブログ管理
+@blogs.route('/sandbox_blog_maintenance')
 @login_required
-def blog_maintenance():
+def sandbox_blog_maintenance():
     if not current_user.is_administrator():
         abort(403)
     page = request.args.get('page', 1, type=int)
-    blogs = Blog.query.order_by(Blog.id).paginate(page=page, per_page=10)
-    return render_template('maintenance/blog_maintenance.html', blogs=blogs)
+    if Blog.query.first():
+        blogs = Blog.query.order_by(Blog.id).paginate(page=page, per_page=10)
+    else:
+        blogs = ''
+    return render_template('maintenance/sandbox_blog_maintenance.html', blogs=blogs)
+
+#他ブログ管理
+@blogs.route('/other_blog_maintenance')
+@login_required
+def other_blog_maintenance():
+    if not current_user.is_administrator():
+        abort(403)
+    page = request.args.get('page', 1, type=int)
+    if OtherBlog.query.first():
+        otherblogs = OtherBlog.query.order_by(OtherBlog.id).paginate(page=page, per_page=10)
+    else:
+        otherblogs = ''
+    return render_template('maintenance/other_blog_maintenance.html', otherblogs=otherblogs)
 
 #ブログカテゴリ管理
 @blogs.route('/category_maintenance')
