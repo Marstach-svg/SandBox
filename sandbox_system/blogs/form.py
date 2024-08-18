@@ -6,8 +6,8 @@ from sandbox_system.models import BlogCategory
 
 
 class BlogForm(FlaskForm):
-    title = StringField('タイトル（40字以内）', validators=[DataRequired(), Length(max=40, message='タイトルの制限字数を超えています')])
-    summary = StringField('要約(80字以内)', validators=[DataRequired(), Length(max=80, message='要約の制限字数を超えています')])
+    title = StringField('タイトル（35字以内）', validators=[DataRequired(), Length(max=38, message='タイトルの制限字数を超えています')])
+    summary = StringField('要約(60字以内)', validators=[DataRequired(), Length(max=64, message='要約の制限字数を超えています')])
     category = SelectField('カテゴリ', coerce=int)
     text = TextAreaField('本文', validators=[DataRequired()])
     picture = FileField('アイキャッチ画像', validators=[DataRequired(), FileAllowed(['jpg', 'png'])])
@@ -23,8 +23,8 @@ class BlogForm(FlaskForm):
 
 
 class OtherBlogForm(FlaskForm):
-    title = StringField('タイトル(40字以内)', validators=[DataRequired(), Length(max=40, message='タイトルの制限字数を超えています')])
-    summary = StringField('要約（80字以内）', validators=[DataRequired(), Length(max=80, message='要約の制限字数を超えています')])
+    title = StringField('タイトル(35字以内)', validators=[DataRequired(), Length(max=38, message='タイトルの制限字数を超えています')])
+    summary = StringField('要約（60字以内）', validators=[DataRequired(), Length(max=64, message='要約の制限字数を超えています')])
     category = SelectField('カテゴリ', coerce=int)
     text = TextAreaField('本文コピペ（検索用）', validators=[DataRequired()])
     url = StringField('ページ先URL', validators=[DataRequired()])

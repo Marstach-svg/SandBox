@@ -47,14 +47,18 @@
             </div>
 
             <!-- サイドバー -->
-            <div class="col-md-3">
+            <div class="col-md-3 p-2 bg-opacity-10 border border-secondary border-end-0 border-top-0 border-bottom-0">
                 <div class="position-sticky" style="top: 12rem;">
-                    <div class="container-fluid mb-5">
+                    <div class="container-fluid mb-4">
                         <form action="{{ url_for('blogs.other_blog_search') }}" class="d-flex" method="post">
                             {{ form.hidden_tag() }}
                             {{ render_field(form.searchtext, class="form-control", placeholder="検索テキストを入力") }}
                             {{ form.submit(class="btn btn-warning") }}
                         </form>
+                    </div>
+                    <div class="p-4 mb-4 bg-secondary-subtle form-control">
+                        <h4>SandBoxとは</h4>
+                        <p>エンジニアをめざす壁が高くエンジニアの交友関係も築きにくいと思われがちな文系学生を助けるために作られたwebアプリ</p>
                     </div>
                     <div class="container pb-4">
                         <h4>Add <span class="fs-6 ms-2 fst-italic">ブログ・カテゴリ追加</span></h4>

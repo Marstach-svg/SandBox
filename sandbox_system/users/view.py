@@ -64,3 +64,10 @@ def user_maintenance():
     page = request.args.get('page', 1, type=int)
     users = User.query.order_by(User.id).paginate(page=page, per_page=10)
     return render_template('maintenance/user_maintenance.html', users=users)
+
+@users.route('/user_list')
+@login_required
+def user_list():
+    page = request.args.get('page', 1, type=int)
+    users = User.query.order_by(User.id).paginate(page=page, per_page=10)
+    return render_template('user/user_list.html', users=users)

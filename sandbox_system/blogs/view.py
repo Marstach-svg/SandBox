@@ -194,6 +194,12 @@ def favorite_blog_search():
 def other_blog_search():
     form = BlogSearchForm()
     category_form = BlogCategoryForm()
+    if category_form.validate_on_submit():
+        new_category = BlogCategory(category=category_form.category.data)
+        db.session.add(new_category)
+        db.session.commit()
+        flash('カテゴリが追加されました')
+        return redirect(url_for('blogs.other_blog_list'))
     searchtext = ''
     if form.validate_on_submit():
         searchtext = form.searchtext.data
@@ -286,7 +292,10 @@ def user_blog(user_id):
         db.session.commit()
         flash('カテゴリが追加されました')
         return redirect(url_for('blogs.blog_list'))
-    blog_user = Blog.query.filter_by(user_id=user_id).first()
+    if Blog.query.filter_by(user_id=user_id).first():
+        blog_user = Blog.query.filter_by(user_id=user_id).first()
+    else:
+        blog_user = ''
     page = request.args.get('page', 1, type=int)
     if Blog.query.filter_by(user_id=user_id).first():
         blogs = Blog.query.filter_by(user_id=user_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)

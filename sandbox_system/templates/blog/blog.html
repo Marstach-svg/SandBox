@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container">
+<div class="container mb-4">
     <div class="row">
         <div class="col-1">
             {% if favorite_blog %}
@@ -17,7 +17,7 @@
             {% endif %}
         </div>
         <div class="col-8">
-            <div class="card mb-5">
+            <div class="card mb-3">
                 <div class="container">
                     <div class="container text-center my-5">
                         <h1>{{ blog.title }}</h1>
@@ -32,15 +32,88 @@
                     <p>{{ blog.text|safe }}</p>
                 </div>
             </div>
+            <div class="card mb-3">
+                <div class="container">
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <h1 class="py-5 p-2">画像</h1>
+                        </div>
+                        <div class="col">
+                            <p class="pt-5 p-2">authorname</p>
+                            <p class="pb-3 p-2">introduce</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-1">
+                <div class="container">
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <input type="text" class="my-3" placeholder="コメント欄">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-1">
+                <div class="container">
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <p class="my-3">for文で時系列に沿って流したコメントたち</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
+
+        <!-- サイドバー -->
+        <div class="col-md-3 p-2 bg-opacity-10 border border-secondary border-end-0 border-top-0 border-bottom-0">
             <div class="position-sticky mt-2" style="top: 9rem;">
-                <div class="container-fluid mb-5">
+                <div class="container-fluid mb-4">
                     <form action="{{ url_for('blogs.sandbox_blog_search') }}" class="d-flex" method="post">
                         {{ form.hidden_tag() }}
                         {{ render_field(form.searchtext, class="form-control", placeholder="検索テキストを入力") }}
                         {{ form.submit(class="btn btn-warning") }}
                     </form>
+                </div>
+                <div class="p-4 mb-4 bg-secondary-subtle form-control">
+                    <h4>SandBoxとは</h4>
+                    <p>エンジニアをめざす壁が高くエンジニアの交友関係も築きにくいと思われがちな文系学生を助けるために作られたwebアプリ</p>
+                </div>
+                <div class="container pb-4">
+                    <h4>Add <span class="fs-6 ms-2 fst-italic">ブログ・カテゴリ追加</span></h4>
+                    <hr>
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <a href="{{ url_for('blogs.other_blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋他ブログ追加</a>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container py-3">
+                    <h4>SandBox <span class="fs-6 ms-2 fst-italic">おすすめブログ</span></h4>
+                    <hr>
+                    {% if recent_blogs %}
+                    {% for recent_blog in recent_blogs %}
+                    <div class="col mb-3">
+                        <div class="card h-100">
+                            <div class="card-body" style="max-height: 13rem;">
+                                {% if recent_blog.image %}
+                                    <div style="text-align: center;">
+                                            <img src="{{ url_for('static', filename='image/' + recent_blog.image) }}" class="img-fluid card-image-top" style="max-height: 5rem;">
+                                    </div>
+                                {% endif %}
+                                <hr>
+                                <h5 class="card-title"><a href="{{ url_for('blogs.blog', blog_id=recent_blog.id) }}" class="text-decoration-none text-dark">{{ recent_blog.title }}</a></h5>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-center my-3">ブログがありません</p>
+                    {% endif %}
                 </div>
                 <div class="container">
                     <h4>Category <span class="fs-6 ms-2">カテゴリ一覧</span></h4>

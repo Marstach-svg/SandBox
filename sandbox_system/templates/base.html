@@ -55,7 +55,7 @@
                                         </li>
                                     {% else %}
                                         <li>
-                                            <a class="nav-link active text-warning mx-2" aria-current="page" href="#">User</a>
+                                            <a class="nav-link active text-warning mx-2" aria-current="page" href="{{ url_for('users.user_list') }}">User</a>
                                         </li>
                                     {% endif %}
                                 {% endif %}
