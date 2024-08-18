@@ -144,8 +144,11 @@ def blog(blog_id):
         blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
     else:
         blog_categories = ''
-    if BlogFavorite.query.filter_by(favorite_user_id=current_user.id, blog_id=blog_id).first():
-        favorite_blog = BlogFavorite.query.filter_by(favorite_user_id=current_user.id, blog_id=blog_id).first()
+    if current_user.is_authenticated:
+        if BlogFavorite.query.filter_by(favorite_user_id=current_user.id, blog_id=blog_id).first():
+            favorite_blog = BlogFavorite.query.filter_by(favorite_user_id=current_user.id, blog_id=blog_id).first()
+        else:
+            favorite_blog = ''
     else:
         favorite_blog = ''
     if Blog.query.first():
@@ -218,6 +221,7 @@ def other_blog_search():
 
 #お気に入りブログ内検索
 @blogs.route('/favorite_blog_search', methods=['GET', 'POST'])
+@login_required
 def favorite_blog_search():
     form = BlogSearchForm()
     searchtext = ''
@@ -306,6 +310,7 @@ def other_category_blog(blog_category_id):
 
 #お気に入りブログでカテゴリ検索
 @blogs.route('/<int:blog_category_id>/favorite_category_blog', methods=['GET', 'POST'])
+@login_required
 def favorite_category_blog(blog_category_id):
     form = BlogSearchForm()
     blog_category = BlogCategory.query.filter_by(id=blog_category_id).first()
