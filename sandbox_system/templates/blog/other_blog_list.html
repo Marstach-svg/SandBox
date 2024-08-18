@@ -71,6 +71,7 @@
                     <div class="container py-3">
                         <h4>Category <span class="fs-6 ms-2 fst-italic">カテゴリ一覧</span></h4>
                         <hr>
+                        {% if blog_categories %}
                         {% for blog_category in blog_categories %}
                         <ol class="list-unstyled">
                             <li>
@@ -79,6 +80,9 @@
                             <hr>
                         </ol>
                         {% endfor %}
+                        {% else %}
+                        <p class="text-center my-3">カテゴリがありません</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>

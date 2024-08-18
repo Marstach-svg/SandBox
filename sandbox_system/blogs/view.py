@@ -14,7 +14,7 @@ def sandbox_blog_list():
     form = BlogSearchForm()
     category_form = BlogCategoryForm()
     if category_form.validate_on_submit():
-        if current_user == login_user:
+        if current_user.is_authenticated:
             new_category = BlogCategory(category=category_form.category.data)
             db.session.add(new_category)
             db.session.commit()
@@ -23,7 +23,10 @@ def sandbox_blog_list():
         else:
             flash('ログインが必要です')
             return redirect(url_for('users.login'))
-    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
     page = request.args.get('page', 1, type=int)
     if Blog.query.first():
         blogs = Blog.query.order_by(Blog.id.desc()).paginate(page=page, per_page=10)
@@ -37,7 +40,7 @@ def other_blog_list():
     form = BlogSearchForm()
     category_form = BlogCategoryForm()
     if category_form.validate_on_submit():
-        if current_user == login_user:
+        if current_user.is_authenticated:
             new_category = BlogCategory(category=category_form.category.data)
             db.session.add(new_category)
             db.session.commit()
@@ -47,7 +50,10 @@ def other_blog_list():
             flash('ログインが必要です')
             return redirect(url_for('users.login'))
     page = request.args.get('page', 1, type=int)
-    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
     if OtherBlog.query.first():
         otherblogs = OtherBlog.query.order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
     else:
@@ -59,7 +65,10 @@ def other_blog_list():
 @login_required
 def my_favorite_list():
     form = BlogSearchForm()
-    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
     page = request.args.get('page', 1, type=int)
     if BlogFavorite.query.filter_by(favorite_user_id=current_user.id).first():
         blogs = BlogFavorite.query.filter_by(favorite_user_id=current_user.id).order_by(BlogFavorite.id.desc()).paginate(page=page, per_page=10)
@@ -107,7 +116,10 @@ def blog(blog_id):
     blog = Blog.query.get_or_404(blog_id)
     form = BlogSearchForm()
     favorite_form = BlogFavoriteForm()
-    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
     if BlogFavorite.query.filter_by(favorite_user_id=current_user.id, blog_id=blog_id).first():
         favorite_blog = BlogFavorite.query.filter_by(favorite_user_id=current_user.id, blog_id=blog_id).first()
     else:
@@ -135,7 +147,10 @@ def sandbox_blog_search():
         blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     else:
         blogs = ''
-    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
     return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, searchtext=searchtext)
 
 #お気に入りブログ内検索
@@ -148,7 +163,10 @@ def favorite_blog_search():
     elif request.method == 'GET':
         form.searchtext.data == ''
     page = request.args.get('page', 1, type=int)
-    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
     if BlogFavorite.query.filter_by(favorite_user_id=current_user.id).first():
         blogs = BlogFavorite.query.filter_by(favorite_user_id=current_user.id).filter((BlogFavorite.text.contains(searchtext)) | (BlogFavorite.title.contains(searchtext)) | (BlogFavorite.summary.contains(searchtext))).order_by(BlogFavorite.id.desc()).paginate(page=page, per_page=10)
     else:
@@ -170,7 +188,11 @@ def other_blog_search():
         otherblogs = OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
     else:
         otherblogs = ''
-    return render_template('blog/other_blog_list.html', otherblogs=otherblogs, form=form, category_form=category_form, searchtext=searchtext)
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
+    return render_template('blog/other_blog_list.html', otherblogs=otherblogs, form=form, category_form=category_form, searchtext=searchtext, blog_categories=blog_categories)
 
 #sandboxブログでカテゴリ検索
 @blogs.route('/<int:blog_category_id>/sandbox_category_blog', methods=['GET', 'POST'])
@@ -242,7 +264,10 @@ def user_blog(user_id):
         blogs = Blog.query.filter_by(user_id=user_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     else:
         blogs = ''
-    blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    if BlogCategory.query.first():
+        blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
+    else:
+        blog_categories = ''
     return render_template('blog/sandbox_blog_list.html', blogs=blogs, blog_categories=blog_categories, form=form, category_form=category_form, blog_user=blog_user)
 
 #ブログお気に入り登録
