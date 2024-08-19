@@ -24,18 +24,24 @@
                 <div class="row">
                     {% if otherblogs %}
                     {% for otherblog in otherblogs.items %}
-                    <div class="col-6 mb-4">
+                    <div class="col-12 mb-4">
                         <div class="card h-100">
-                            <div class="card-body" style="max-height: 26rem;">
-                                {% if otherblog.image %}
-                                    <div class="mb-3" style="text-align: center;">
-                                            <img src="{{ url_for('static', filename='image/' + otherblog.image) }}" class="img-fluid card-image-top" style="max-height: 10rem;">
+                            <div class="card-body" style="max-height: 15rem;">
+                                <div class="container">
+                                    <div class="row row-cols-auto">
+                                        {% if otherblog.image %}
+                                            <div class="col-3 mb-3" style="text-align: center;">
+                                                    <img src="{{ url_for('static', filename='image/' + otherblog.image) }}" class="img-fluid card-image-top" style="max-height: 8rem; max-width: 12rem;">
+                                            </div>
+                                        {% endif %}
+                                        <div class="col-9">
+                                            <h5 class="card-title pt-2"><a href="{{ otherblog.url }}" class="text-decoration-none text-dark">{{ otherblog.title }}</a></h5>
+                                            <hr>
+                                            <p>{{ otherblog.summary }}</p>
+                                            <a href="{{ otherblog.url }}" class="btn btn-secondary">続きを読む…</a>
+                                        </div>
                                     </div>
-                                {% endif %}
-                                <h3 class="card-title pt-2"><a href="{{ otherblog.url }}" class="text-decoration-none text-dark">{{ otherblog.title }}</a></h3>
-                                <hr>
-                                <p>{{ otherblog.summary }}</p>
-                                <a href="{{ otherblog.url }}" class="btn btn-secondary">続きを読む…</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -86,7 +92,7 @@
                                         </div>
                                     {% endif %}
                                     <hr>
-                                    <h5 class="card-title"><a href="{{ url_for('blogs.blog', blog_id=recent_blog.id) }}" class="text-decoration-none text-dark">{{ recent_blog.title }}</a></h5>
+                                    <p class="card-title fs-6"><a href="{{ url_for('blogs.blog', blog_id=recent_blog.id) }}" class="text-decoration-none text-dark"><b>{{ recent_blog.title }}</b></a></p>
                                     <hr>
                                 </div>
                             </div>
@@ -96,7 +102,7 @@
                         <p class="text-center my-3">ブログがありません</p>
                         {% endif %}
                     </div>
-                    <div class="container py-3">
+                    <div class="container mb-3">
                         <h4>Category <span class="fs-6 ms-2 fst-italic">カテゴリ一覧</span></h4>
                         <hr>
                         {% if blog_categories %}

@@ -20,7 +20,7 @@
             <div class="card mb-3">
                 <div class="container">
                     <div class="container text-center my-5">
-                        <h1>{{ blog.title }}</h1>
+                        <h3>{{ blog.title }}</h3>
                         <hr>
                         <p>{{ blog.date }} : <a href="{{ url_for('blogs.user_blog', user_id=blog.user_id) }}" class="text-decoration-none">{{ blog.author.username }}</a> : {{ blog.blogcategory.category }}</p>
                     </div>
@@ -105,7 +105,7 @@
                                     </div>
                                 {% endif %}
                                 <hr>
-                                <h5 class="card-title"><a href="{{ url_for('blogs.blog', blog_id=recent_blog.id) }}" class="text-decoration-none text-dark">{{ recent_blog.title }}</a></h5>
+                                <p class="card-title fs-6"><a href="{{ url_for('blogs.blog', blog_id=recent_blog.id) }}" class="text-decoration-none text-dark"><b>{{ recent_blog.title }}</b></a></p>
                                 <hr>
                             </div>
                         </div>

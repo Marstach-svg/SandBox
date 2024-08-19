@@ -38,18 +38,24 @@
                 <div class="row">
                     {% if blogs %}
                     {% for blog in blogs.items %}
-                    <div class="col-6 mb-4">
+                    <div class="col-12 mb-4">
                         <div class="card h-100">
-                            <div class="card-body" style="max-height: 26rem;">
-                                {% if blog.image %}
-                                    <div class="mb-3" style="text-align: center;">
-                                            <img src="{{ url_for('static', filename='image/' + blog.image) }}" class="img-fluid card-image-top" style="max-height: 10rem;">
+                            <div class="card-body" style="max-height: 15rem;">
+                                <div class="container">
+                                    <div class="row row-cols-auto">
+                                        {% if blog.image %}
+                                            <div class="col-3 mb-3" style="text-align: center;">
+                                                    <img src="{{ url_for('static', filename='image/' + blog.image) }}" class="img-fluid card-image-top" style="max-height: 8rem; max-width: 11rem;">
+                                            </div>
+                                        {% endif %}
+                                        <div class="col-9">
+                                            <h5 class="card-title pt-2"><a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="text-decoration-none text-dark">{{ blog.title }}</a></h5>
+                                            <hr>
+                                            <p>{{ blog.summary }}</p>
+                                            <a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="btn btn-secondary">続きを読む…</a>
+                                        </div>
                                     </div>
-                                {% endif %}
-                                <h3 class="card-title pt-2"><a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="text-decoration-none text-dark">{{ blog.title }}</a></h3>
-                                <hr>
-                                <p>{{ blog.summary }}</p>
-                                <a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="btn btn-secondary">続きを読む…</a>
+                                </div>
                             </div>
                         </div>
                     </div>
