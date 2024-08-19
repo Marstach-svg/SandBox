@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from sandbox_system import db
 from sandbox_system.models import User
 from sandbox_system.users.form import RegistrationForm, LoginForm, UpdateUserForm
+from sandbox_system.blogs.image import add_image
 
 users = Blueprint('users', __name__)
 
@@ -10,7 +11,8 @@ users = Blueprint('users', __name__)
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data, password=form.password.data, administrator='0')
+        picture = add_image(form.picture.data)
+        user = User(username=form.username.data, email=form.email.data, introduce='例 よろしくお願いします。', tech='例 Python独学1年', job='例 フロントエンドエンジニア', image=picture, password=form.password.data, administrator='0')
         db.session.add(user)
         db.session.commit()
         flash('ユーザーが登録されました')
@@ -46,10 +48,11 @@ def logout():
 def index():
     return render_template('index.html')
 
-@users.route('/my_page')
+@users.route('/<int:user_id>/my_page')
 @login_required
-def my_page():
-    return render_template('user/my_page/profile.html')
+def my_page(user_id):
+    profile = User.query.filter_by(id=user_id).first()
+    return render_template('user/my_page/profile.html', profile=profile)
 
 @users.route('/my_blog')
 @login_required

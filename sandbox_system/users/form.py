@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import ValidationError, StringField, PasswordField, SubmitField
+from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Email, EqualTo
 from sandbox_system.models import User
 
@@ -9,6 +10,7 @@ class RegistrationForm(FlaskForm):
     email = StringField('メールアドレス', validators=[DataRequired(), Email(message='正しいメールアドレスを入力してください')])
     password = PasswordField('パスワード', validators=[DataRequired(), EqualTo('pass_confirm', message='パスワードが一致していません')])
     pass_confirm = PasswordField('パスワード（確認）', validators=[DataRequired()])
+    picture = FileField('アイキャッチ画像', validators=[DataRequired(), FileAllowed(['jpg','jpeg', 'png'])])
     submit = SubmitField('登録')
 
     def validate_username(self, field):

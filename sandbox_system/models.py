@@ -16,13 +16,21 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
+    introduce = db.Column(db.Text)
+    tech = db.Column(db.Text)
+    job = db.Column(db.String(64))
+    image = db.Column(db.String(140))
     password_hash = db.Column(db.String(128))
     administrator = db.Column(db.String(1))
     blog = db.relationship('Blog', backref = 'author', lazy = 'dynamic')
 
-    def __init__(self, email, username, password, administrator):
+    def __init__(self, email, username, introduce, tech, job, image, password, administrator):
         self.email = email
         self.username = username
+        self.introduce = introduce
+        self.tech = tech
+        self.job = job
+        self.image = image
         self.password = password
         self.administrator = administrator
 

@@ -4,7 +4,7 @@ from sandbox_system.models import User
 db.drop_all()
 db.create_all()
 
-user1 = User(username='Marstach.', email='ryoken.102388@gmail.com', password='Maruko880325', administrator='1')
+user1 = User(username='Marstach.', email='ryoken.102388@gmail.com', introduce='よろしくお願いします', tech='Python, flask, その他基礎知識', job='大学生', image='スクリーンショット 2024-07-13 131515.png', password='Maruko880325', administrator='1')
 
 db.session.add(user1)
 db.session.commit()

@@ -375,7 +375,7 @@ def blog_favorite(blog_id):
         favorite_blog =  BlogFavorite(title=blog.title, summary=blog.summary, text=blog.text, image=blog.image, blog_id=blog_id, favorite_user_id=current_user.id, category_id=blog.category_id)
         db.session.add(favorite_blog)
         db.session.commit()
-        flash('ブログがお気に入り登録されました')
+        flash('ブログがお気に入りに登録されました')
         return redirect(url_for('blogs.blog', blog_id=blog_id))
     else:
         abort(403)

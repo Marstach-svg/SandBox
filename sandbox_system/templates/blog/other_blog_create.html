@@ -37,14 +37,7 @@
                             <div class="mb-3">
                                 {{ form.picture.label(class="form-control-label") }}
                                 <br>
-                                {% if form.picture.data %}
-                                <div style="text-align: left;">
-                                    <!-- ??? -->
-                                    <img src="{{ url_for('static', filename='image/' + form.picture.data) }}">
-                                </div>
-                                {% endif %}
-                                <br>
-                                {{ render_field(form.picture, class="form-control-file") }}
+                                {{ render_field(form.picture, class="form-control-file form-control", style="width: 350px;") }}
                             </div>
                             <div class="container mb-3">
                                 <dib class="row">

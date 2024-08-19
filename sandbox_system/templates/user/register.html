@@ -15,12 +15,13 @@
                     <div class="card-body">
                         <h3 class="text-warning mt-2">ユーザー登録</h3>
                         <hr class="text-light">
-                        <form method="post">
+                        <form method="post" enctype="multipart/form-data">
                             {{ form.hidden_tag() }}
                             {{ render_field(form.username, class='form-control form-control-lg mb-3', placeholder='your name') }}
                             {{ render_field(form.email, class='form-control form-control-lg mb-3', placeholder='your email') }}
                             {{ render_field(form.password, class='form-control form-control-lg mb-3', placeholder='password') }}
                             {{ render_field(form.pass_confirm, class='form-control form-control-lg mb-3', placeholder='password(confirm)') }}
+                            {{ render_field(form.picture, class="form-control-file form-control mb-3") }}
                             {{ form.submit(class='btn btn-warning form-control form-control-lg mb-2') }}
                         </form>
                     </div>
