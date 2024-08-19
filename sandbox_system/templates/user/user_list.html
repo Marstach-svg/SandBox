@@ -20,7 +20,7 @@
                     <td>{{ user.id }}</td>
                     <td>{{ user.username }}</td>
                     <td><a href="{{ url_for('blogs.user_blog', user_id=user.id) }}">4</a></td>
-                    <td><a href="{{ url_for('users.my_page', user_id=user.id) }}" class="btn btn-secondary">詳細</a></td>
+                    <td><a href="{{ url_for('users.profile', user_id=user.id) }}" class="btn btn-secondary">詳細</a></td>
                 </tr>
                 </tbody>
                 {% endfor %}

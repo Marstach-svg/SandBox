@@ -174,7 +174,7 @@ def sandbox_blog_search():
         flash('カテゴリが追加されました')
         return redirect(url_for('blogs.sandbox_blog_list'))
     page = request.args.get('page', 1, type=int)
-    if Blog.query.first():
+    if Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).first():
         blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     else:
         blogs = ''
@@ -205,7 +205,7 @@ def other_blog_search():
     elif request.method == 'GET':
         form.searchtext.data == ''
     page = request.args.get('page', 1, type=int)
-    if OtherBlog.query.first():
+    if OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).first():
         otherblogs = OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
     else:
         otherblogs = ''

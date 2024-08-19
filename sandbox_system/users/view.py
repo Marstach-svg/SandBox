@@ -54,6 +54,12 @@ def my_page(user_id):
     profile = User.query.filter_by(id=user_id).first()
     return render_template('user/my_page/my_profile.html', profile=profile)
 
+@users.route('/<int:user_id>/profile')
+@login_required
+def profile(user_id):
+    profile = User.query.filter_by(id=user_id).first()
+    return render_template('user/my_page/profile.html', profile=profile)
+
 @users.route('/my_blog')
 @login_required
 def my_blog():
