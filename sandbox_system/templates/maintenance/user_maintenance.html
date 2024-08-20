@@ -9,6 +9,7 @@
                 <thead>
                 <tr>
                     <th>id</th>
+                    <th>アイコン</th>
                     <th>名前</th>
                     <th>メールアドレス</th>
                     <th>プログ投稿数</th>
@@ -19,6 +20,7 @@
                 <tbody>
                 <tr>
                     <td>{{ user.id }}</td>
+                    <td><img src="{{ url_for('static', filename='image/' + user.image) }}" class="rounded-circle border border-secondary-subtle" style="width: 50px; height: 50px;" /></td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                     <td><a href="#">ブログ投稿数</a></td>

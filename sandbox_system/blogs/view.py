@@ -151,11 +151,56 @@ def blog(blog_id):
             favorite_blog = ''
     else:
         favorite_blog = ''
-    if Blog.query.first():
-        recent_blogs = Blog.query.order_by(Blog.id.desc()).limit(3).all()
+    if OtherBlog.query.first():
+        recent_other_blogs = OtherBlog.query.order_by(OtherBlog.id.desc()).limit(3).all()
     else:
-        recent_blogs = ''
-    return render_template('blog/blog.html', blog=blog, form=form, favorite_form=favorite_form, blog_categories=blog_categories, blog_id=blog_id, favorite_blog=favorite_blog, recent_blogs=recent_blogs)
+        recent_other_blogs = ''
+    return render_template('blog/blog.html', blog=blog, form=form, favorite_form=favorite_form, blog_categories=blog_categories, blog_id=blog_id, favorite_blog=favorite_blog, recent_other_blogs=recent_other_blogs)
+
+@blogs.route('/<int:blog_id>/delete_blog', methods=['GET', 'POST'])
+@login_required
+def delete_blog(blog_id):
+    blog = Blog.query.get_or_404(blog_id)
+    if BlogFavorite.query.filter_by(blog_id=blog_id).first():
+        favorite_blogs = BlogFavorite.query.filter_by(blog_id=blog_id).all()
+    else:
+        favorite_blogs = ''
+    if not blog.author == current_user:
+        abort(403)
+    #BlogFavoriteがBlogに外部キーでつながっているため、外部キーエラーを避けるためにBlogFavoriteのデータを先にdeleteしなければならない
+    if favorite_blogs:
+        for favorite_blog in favorite_blogs:
+            db.session.delete(favorite_blog)
+            db.session.commit()
+    db.session.delete(blog)
+    db.session.commit()
+    flash('ブログ投稿が削除されました')
+    return redirect(url_for('blogs.sandbox_blog_list'))
+
+@blogs.route('/<int:blog_id>/blog_update', methods=['GET', 'POST'])
+@login_required
+def blog_update(blog_id):
+    form = BlogForm()
+    blog = Blog.query.get_or_404(blog_id)
+    if not blog.author == current_user:
+        abort(403)
+    if form.validate_on_submit():
+        blog.title = form.title.data
+        if form.picture.data:
+            blog.image = add_image(form.picture.data)
+        blog.catagory_id = form.category.data
+        blog.text = form.text.data
+        blog.summary = form.summary.data
+        db.session.commit()
+        flash('ブログ投稿が更新されました')
+        return redirect(url_for('blogs.blog', blog_id=blog.id))
+    elif request.method == 'GET':
+        form.title.data = blog.title
+        form.picture.data = blog.image
+        form.category.data = blog.category_id
+        form.text.data = blog.text
+        form.summary.data = blog.summary
+    return render_template('blog/blog_create.html', form=form)
 
 #sandboxブログ検索
 @blogs.route('/sandbox_blog_search', methods=['GET', 'POST'])

@@ -30,6 +30,22 @@
                     </div>
                     {% endif %}
                     <p>{{ blog.text|safe }}</p>
+                    <div class="container pt-3 pb-2">
+                        <div class="row row-cols-auto">
+                            {% if current_user.is_active %}
+                                {% if blog.author == current_user %}
+                                    <dib class="col">
+                                        <a href="{{ url_for('blogs.blog_update', blog_id=blog.id) }}" class="btn btn-warning">編集</a>
+                                    </dib>
+                                    <dib class="col">
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#del_modal">
+                                            削除
+                                        </button>
+                                    </dib>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="card bg-light  mb-3">
@@ -67,6 +83,15 @@
                     </div>
                 </div>
             </div>
+            <div class="container pt-2">
+                <div class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-secondary" style="width: 200px;" onclick="history.back()">
+                            戻る
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- サイドバー -->
@@ -88,7 +113,7 @@
                     <hr>
                     <div class="row row-cols-auto">
                         <div class="col">
-                            <a href="{{ url_for('blogs.other_blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋他ブログ追加</a>
+                            <a href="{{ url_for('blogs.blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋ブログ作成</a>
                         </div>
                         <div class="col">
                             <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
@@ -96,20 +121,20 @@
                     </div>
                 </div>
                 <div class="container py-3">
-                    <h4>SandBox <span class="fs-6 ms-2 fst-italic">おすすめブログ</span></h4>
+                    <h4>Others <span class="fs-6 ms-2 fst-italic">おすすめ他サイトブログ</span></h4>
                     <hr>
-                    {% if recent_blogs %}
-                    {% for recent_blog in recent_blogs %}
+                    {% if recent_other_blogs %}
+                    {% for recent_other_blog in recent_other_blogs %}
                     <div class="col mb-3">
                         <div class="card h-100">
                             <div class="card-body" style="max-height: 13rem;">
-                                {% if recent_blog.image %}
+                                {% if recent_other_blog.image %}
                                     <div style="text-align: center;">
-                                            <img src="{{ url_for('static', filename='image/' + recent_blog.image) }}" class="img-fluid card-image-top" style="max-height: 5rem;">
+                                            <img src="{{ url_for('static', filename='image/' + recent_other_blog.image) }}" class="img-fluid card-image-top" style="max-height: 5rem;">
                                     </div>
                                 {% endif %}
                                 <hr>
-                                <p class="card-title fs-6"><a href="{{ url_for('blogs.blog', blog_id=recent_blog.id) }}" class="text-decoration-none text-dark"><b>{{ recent_blog.title }}</b></a></p>
+                                <p class="card-title fs-6"><a href="{{ recent_other_blog.url }}" class="text-decoration-none text-dark"><b>{{ recent_other_blog.title }}</b></a></p>
                                 <hr>
                             </div>
                         </div>
@@ -135,6 +160,27 @@
                     <p class="text-center my-3">カテゴリがありません</p>
                     {% endif %}
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="del_modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">削除確認</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>このブログ投稿を削除しますか？</p>
+            </div>
+            <div class="modal-footer">
+                <form action="{{ url_for('blogs.delete_blog', blog_id=blog.id) }}" method="POST">
+                    <input type="submit" class="btn btn-danger" value="削除">
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
             </div>
         </div>
     </div>
