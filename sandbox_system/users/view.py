@@ -2,7 +2,7 @@ from flask import Blueprint,render_template, url_for, redirect, abort, flash, re
 from flask_login import login_user, logout_user, login_required, current_user
 from sandbox_system import db
 from sandbox_system.models import User
-from sandbox_system.users.form import RegistrationForm, LoginForm, UpdateUserForm
+from sandbox_system.users.form import RegistrationForm, LoginForm, UserUpdateForm
 from sandbox_system.blogs.image import add_image
 
 users = Blueprint('users', __name__)
@@ -38,6 +38,35 @@ def login():
             flash('入力されたユーザーは登録されていません')
     return render_template('user/login.html', form=form)
 
+@users.route('/<int:user_id>/user_update', methods=['GET', 'POST'])
+@login_required
+def user_update(user_id):
+    form = UserUpdateForm(user_id)
+    user = User.query.get_or_404(user_id)
+    if user.id != current_user.id:
+        abort(403)
+    if form.validate_on_submit():
+        user.username = form.username.data
+        if form.picture.data:
+            user.image = add_image(form.picture.data)
+        user.email = form.email.data
+        user.introduce = form.introduce.data
+        user.tech = form.tech.data
+        user.job = form.job.data
+        if form.password.data:
+            user.password = form.password.data
+        db.session.commit()
+        flash('ユーザー情報が更新されました')
+        return redirect(url_for('users.my_page', user_id=user.id))
+    elif request.method == 'GET':
+        form.username.data = user.username
+        form.email.data = user.email
+        form.introduce.data = user.introduce
+        form.tech.data = user.tech
+        form.job.data = user.job
+        form.picture.data = user.image
+    return render_template('user/user_update.html', form=form)
+
 @users.route('/logout')
 @login_required
 def logout():
@@ -59,11 +88,6 @@ def my_page(user_id):
 def profile(user_id):
     profile = User.query.filter_by(id=user_id).first()
     return render_template('user/my_page/profile.html', profile=profile)
-
-@users.route('/my_blog')
-@login_required
-def my_blog():
-    return render_template('user/my_page/my_blog.html')
 
 @users.route('/user_maintenance')
 @login_required

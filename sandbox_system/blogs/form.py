@@ -53,5 +53,11 @@ class BlogCategoryForm(FlaskForm):
         if BlogCategory.query.order_by(category=field.data).first():
             raise ValidationError('入力されたカテゴリ名はすでに使われています')
 
+
 class BlogFavoriteForm(FlaskForm):
     submit = SubmitField('♡')
+
+
+class BlogCommentForm(FlaskForm):
+    comment = TextAreaField('コメント記入欄', validators=[DataRequired()])
+    submit = SubmitField('投稿')

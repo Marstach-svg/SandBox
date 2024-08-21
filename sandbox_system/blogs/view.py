@@ -1,8 +1,8 @@
 from flask import Blueprint,render_template, url_for, redirect, abort, flash, request
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_required, current_user
 from sandbox_system import db
-from sandbox_system.models import Blog, BlogCategory, BlogFavorite, OtherBlog
-from sandbox_system.blogs.form import BlogForm, BlogSearchForm, BlogCategoryForm, BlogFavoriteForm, OtherBlogForm
+from sandbox_system.models import Blog, BlogCategory, BlogFavorite, OtherBlog, BlogComment
+from sandbox_system.blogs.form import BlogForm, BlogSearchForm, BlogCategoryForm, BlogFavoriteForm, OtherBlogForm, BlogCommentForm
 from sandbox_system.blogs.image import add_image
 
 
@@ -29,7 +29,7 @@ def sandbox_blog_list():
         blog_categories = ''
     page = request.args.get('page', 1, type=int)
     if Blog.query.first():
-        blogs = Blog.query.order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+        blogs = Blog.query.order_by(Blog.id.desc()).paginate(page=page, per_page=15)
     else:
         blogs = ''
     if OtherBlog.query.first():
@@ -59,7 +59,7 @@ def other_blog_list():
     else:
         blog_categories = ''
     if OtherBlog.query.first():
-        otherblogs = OtherBlog.query.order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
+        otherblogs = OtherBlog.query.order_by(OtherBlog.id.desc()).paginate(page=page, per_page=15)
     else:
         otherblogs = ''
     if Blog.query.first():
@@ -135,11 +135,18 @@ def other_blog_create():
     return render_template('blog/other_blog_create.html', form=form)
 
 #sandboxブログ詳細ページ
-@blogs.route('/<int:blog_id>/blog')
+@blogs.route('/<int:blog_id>/blog', methods=['GET', 'POST'])
 def blog(blog_id):
     blog = Blog.query.get_or_404(blog_id)
     form = BlogSearchForm()
     favorite_form = BlogFavoriteForm()
+    comment_form = BlogCommentForm()
+    if comment_form.validate_on_submit():
+        blog_comment = BlogComment(user_id=current_user.id, blog_id=blog_id, comment=comment_form.comment.data)
+        db.session.add(blog_comment)
+        db.session.commit()
+        flash('コメントを投稿しました')
+        return redirect(url_for('blogs.blog', blog_id=blog_id))
     if BlogCategory.query.first():
         blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
     else:
@@ -155,19 +162,32 @@ def blog(blog_id):
         recent_other_blogs = OtherBlog.query.order_by(OtherBlog.id.desc()).limit(3).all()
     else:
         recent_other_blogs = ''
-    return render_template('blog/blog.html', blog=blog, form=form, favorite_form=favorite_form, blog_categories=blog_categories, blog_id=blog_id, favorite_blog=favorite_blog, recent_other_blogs=recent_other_blogs)
+    if BlogComment.query.filter_by(blog_id=blog_id).first():
+        blog_comments = BlogComment.query.filter_by(blog_id=blog_id).order_by(BlogComment.id.asc()).all()
+    else:
+        blog_comments = ''
+    return render_template('blog/blog.html', blog=blog, form=form, favorite_form=favorite_form, blog_categories=blog_categories, blog_id=blog_id, favorite_blog=favorite_blog, recent_other_blogs=recent_other_blogs, comment_form=comment_form, blog_comments=blog_comments)
 
+#ブログ削除
 @blogs.route('/<int:blog_id>/delete_blog', methods=['GET', 'POST'])
 @login_required
 def delete_blog(blog_id):
     blog = Blog.query.get_or_404(blog_id)
+    if not blog.author == current_user:
+        abort(403)
     if BlogFavorite.query.filter_by(blog_id=blog_id).first():
         favorite_blogs = BlogFavorite.query.filter_by(blog_id=blog_id).all()
     else:
         favorite_blogs = ''
-    if not blog.author == current_user:
-        abort(403)
+    if BlogComment.query.filter_by(blog_id=blog_id).first():
+        blog_comments = BlogComment.query.filter_by(blog_id=blog_id).all()
+    else:
+        blog_comments = ''
     #BlogFavoriteがBlogに外部キーでつながっているため、外部キーエラーを避けるためにBlogFavoriteのデータを先にdeleteしなければならない
+    if blog_comments:
+        for blog_comment in blog_comments:
+            db.session.delete(blog_comment)
+            db.session.commit()
     if favorite_blogs:
         for favorite_blog in favorite_blogs:
             db.session.delete(favorite_blog)
@@ -177,6 +197,7 @@ def delete_blog(blog_id):
     flash('ブログ投稿が削除されました')
     return redirect(url_for('blogs.sandbox_blog_list'))
 
+#ブログ編集
 @blogs.route('/<int:blog_id>/blog_update', methods=['GET', 'POST'])
 @login_required
 def blog_update(blog_id):
@@ -220,7 +241,7 @@ def sandbox_blog_search():
         return redirect(url_for('blogs.sandbox_blog_list'))
     page = request.args.get('page', 1, type=int)
     if Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).first():
-        blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+        blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=15)
     else:
         blogs = ''
     if BlogCategory.query.first():
@@ -251,7 +272,7 @@ def other_blog_search():
         form.searchtext.data == ''
     page = request.args.get('page', 1, type=int)
     if OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).first():
-        otherblogs = OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
+        otherblogs = OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=15)
     else:
         otherblogs = ''
     if BlogCategory.query.first():
@@ -319,7 +340,7 @@ def sandbox_category_blog(blog_category_id):
     blog_category = BlogCategory.query.filter_by(id=blog_category_id).first()
     page = request.args.get('page', 1, type=int)
     if Blog.query.filter_by(category_id=blog_category_id).first():
-        blogs = Blog.query.filter_by(category_id=blog_category_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+        blogs = Blog.query.filter_by(category_id=blog_category_id).order_by(Blog.id.desc()).paginate(page=page, per_page=15)
     else:
         blogs = ''
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
@@ -343,7 +364,7 @@ def other_category_blog(blog_category_id):
     blog_category = BlogCategory.query.filter_by(id=blog_category_id).first()
     page = request.args.get('page', 1, type=int)
     if OtherBlog.query.filter_by(category_id=blog_category_id).first():
-        otherblogs = OtherBlog.query.filter_by(category_id=blog_category_id).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
+        otherblogs = OtherBlog.query.filter_by(category_id=blog_category_id).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=15)
     else:
         otherblogs = ''
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
@@ -397,7 +418,7 @@ def user_blog(user_id):
         blog_user = ''
     page = request.args.get('page', 1, type=int)
     if Blog.query.filter_by(user_id=user_id).first():
-        blogs = Blog.query.filter_by(user_id=user_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
+        blogs = Blog.query.filter_by(user_id=user_id).order_by(Blog.id.desc()).paginate(page=page, per_page=15)
     else:
         blogs = ''
     if BlogCategory.query.first():

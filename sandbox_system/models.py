@@ -23,6 +23,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(128))
     administrator = db.Column(db.String(1))
     blog = db.relationship('Blog', backref = 'author', lazy = 'dynamic')
+    blog_comment = db.relationship('BlogComment', backref='commenter', lazy='dynamic')
 
     def __init__(self, email, username, introduce, tech, job, image, password, administrator):
         self.email = email
@@ -125,3 +126,17 @@ class BlogCategory(db.Model):
 
     def __init__(self, category):
         self.category = category
+
+
+class BlogComment(db.Model):
+    __tablename__ = 'blog_comment'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'))
+    comment = db.Column(db.Text)
+
+    def __init__(self, user_id, blog_id, comment):
+        self.user_id = user_id
+        self.blog_id = blog_id
+        self.comment = comment
