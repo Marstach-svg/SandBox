@@ -12,7 +12,7 @@
 
         <div class="container bg-light mb-5">
             <div class="row">
-                <div class="col-4 border border-secondary rounded">
+                <div class="col-3 border border-secondary rounded">
                     <div class="position-sticky" style="top: 5rem;">
                         <div class="container-fluid mb-4 mt-3">
                             <form action="#" class="d-flex" method="post">
@@ -37,8 +37,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-8 border border-secondary rounded bg-light">
-                    <div class="position-sticky bg-light" style="top: 4rem;">
+                <div class="col-9 border border-secondary rounded bg-light">
+                    <div class="position-sticky bg-light mb-2" style="top: 4rem;">
                         <div class="container">
                             <div class="row row-cols-auto">
                                 <div class="col">
@@ -51,215 +51,31 @@
                         </div>
                     <hr>
                     </div>
-                    <div class="container">
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <a href="#" class="btn btn-dark text-light fw-bold">R</a>
-                            </div>
+                    {% for chat in chats %}
+                    {% if current_user.id != chat.user_id %}
+                    <div>
+                        <div class="d-flex justify-content-start">
+                            <p><a href="{{ url_for('users.profile', user_id=chat.user_id) }}"><img src="{{ url_for('static', filename='image/' + chat.chat_user.image) }}" class="rounded-circle border border-secondary-subtle" style="width: 30px; height: 30px;" /></a> {{ chat.chat_user.username }}</p>
                         </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <p class="form-control border-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, adipisci!</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <a href="#" class="btn btn-light border border-secondary fw-bold">M</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <p class="form-control bg-success-subtle">python,flaskで開発してます。</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <a href="#" class="btn btn-dark text-light fw-bold">R</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <p class="form-control border-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, adipisci!</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <a href="#" class="btn btn-light border border-secondary fw-bold">M</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <p class="form-control bg-success-subtle">python,flaskで開発してます。</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <a href="#" class="btn btn-dark text-light fw-bold">R</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <p class="form-control border-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, adipisci!</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <a href="#" class="btn btn-light border border-secondary fw-bold">M</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <p class="form-control bg-success-subtle">python,flaskで開発してます。</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <a href="#" class="btn btn-dark text-light fw-bold">R</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <p class="form-control border-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, adipisci!</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <a href="#" class="btn btn-light border border-secondary fw-bold">M</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <p class="form-control bg-success-subtle">python,flaskで開発してます。</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <a href="#" class="btn btn-dark text-light fw-bold">R</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <p class="form-control border-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, adipisci!</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <a href="#" class="btn btn-light border border-secondary fw-bold">M</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <p class="form-control bg-success-subtle">python,flaskで開発してます。</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <a href="#" class="btn btn-dark text-light fw-bold">R</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <p class="form-control border-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, adipisci!</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <a href="#" class="btn btn-light border border-secondary fw-bold">M</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <p class="form-control bg-success-subtle">python,flaskで開発してます。</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <a href="#" class="btn btn-dark text-light fw-bold">R</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <p class="form-control border-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, adipisci!</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <a href="#" class="btn btn-light border border-secondary fw-bold">M</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <p class="form-control bg-success-subtle">python,flaskで開発してます。</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <a href="#" class="btn btn-dark text-light fw-bold">R</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <p class="form-control border-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, adipisci!</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <a href="#" class="btn btn-light border border-secondary fw-bold">M</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <p class="form-control bg-success-subtle">python,flaskで開発してます。</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <a href="#" class="btn btn-dark text-light fw-bold">R</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <p class="form-control border-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, adipisci!</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <a href="#" class="btn btn-light border border-secondary fw-bold">M</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <p class="form-control bg-success-subtle">python,flaskで開発してます。</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <a href="#" class="btn btn-dark text-light fw-bold">R</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col me-auto">
-                                <p class="form-control border-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, adipisci!</p>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <a href="#" class="btn btn-light border border-secondary fw-bold">M</a>
-                            </div>
-                        </div>
-                        <div class="row row-cols-auto">
-                            <div class="col ms-auto">
-                                <p class="form-control bg-success-subtle">python,flaskで開発してます。</p>
-                            </div>
+                        <div class="d-flex justify-content-start">
+                            <p class="form-control border-secondary-subtle w-auto" style="max-width: 700px;">{{ chat.message }}</p>
                         </div>
                     </div>
+                    {% else %}
+                    <div>
+                        <div class="d-flex justify-content-end">
+                            <p class="form-control bg-success-subtle w-auto" style="max-width: 700px;">{{ chat.message }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
                     <div class="sticky-bottom bg-light">
                         <footer>
-                            <form action="#" class="d-flex my-2" method="post">
-                                <input type="text" class="form-control" placeholder="送信内容を入力してください">
-                                <button type="submit" class="btn btn-secondary ms-1"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                            <form action="{{ url_for('chats.chat_message') }}" class="d-flex my-2" method="post">
+                                <input type="text" name="chat_message" class="form-control" placeholder="送信内容を入力してください">
+                                <button type="submit" class="btn btn-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                     <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
-                                </svg></button>
+                                  </svg></button>
                             </form>
                         </footer>
                     </div>

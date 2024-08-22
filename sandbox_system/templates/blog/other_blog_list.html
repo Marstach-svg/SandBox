@@ -66,6 +66,7 @@
                         <h4>SandBoxとは</h4>
                         <p>エンジニアをめざす壁が高くエンジニアの交友関係も築きにくいと思われがちな文系学生を助けるために作られたwebアプリ</p>
                     </div>
+                    {% if current_user.is_administrator() %}
                     <div class="container pb-4">
                         <h4>Add <span class="fs-6 ms-2 fst-italic">ブログ・カテゴリ追加</span></h4>
                         <hr>
@@ -78,6 +79,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     <div class="container py-3">
                         <h4>SandBox <span class="fs-6 ms-2 fst-italic">おすすめブログ</span></h4>
                         <hr>

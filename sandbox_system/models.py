@@ -24,6 +24,7 @@ class User(db.Model, UserMixin):
     administrator = db.Column(db.String(1))
     blog = db.relationship('Blog', backref = 'author', lazy = 'dynamic')
     blog_comment = db.relationship('BlogComment', backref='commenter', lazy='dynamic')
+    chat = db.relationship('Chat', backref='chat_user', lazy='dynamic')
 
     def __init__(self, email, username, introduce, tech, job, image, password, administrator):
         self.email = email
@@ -140,3 +141,32 @@ class BlogComment(db.Model):
         self.user_id = user_id
         self.blog_id = blog_id
         self.comment = comment
+
+
+class Chat(db.Model):
+    __tablename__ = 'chat'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    message = db.Column(db.String())
+
+    def __init__(self, user_id, message):
+        self.user_id = user_id
+        self.message = message
+
+class Event(db.Model):
+    __tablename__ = 'event'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(140))
+    summary = db.Column(db.String(140))
+    text = db.Column(db.Text)
+    url = db.Column(db.String(140))
+    image = db.Column(db.String(140))
+
+    def __init__(self, title, summary, text, url, image):
+        self.title = title
+        self.summary = summary
+        self.text = text
+        self.url = url
+        self.image = image
