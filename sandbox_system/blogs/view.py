@@ -492,5 +492,8 @@ def category_maintenance():
     if not current_user.is_administrator():
         abort(403)
     page = request.args.get('page', 1, type=int)
-    categories = BlogCategory.query.order_by(BlogCategory.id).paginate(page=page, per_page=10)
+    if BlogCategory.query.first():
+        categories = BlogCategory.query.order_by(BlogCategory.id).paginate(page=page, per_page=10)
+    else:
+        categories = ''
     return render_template('maintenance/category_maintenance.html', categories=categories)

@@ -5,6 +5,7 @@
     <div class="row">
         <div class="card">
             <h1 class="text-center my-5">ブログ管理(Others)</h1>
+            {% if otherblogs %}
             <table class="table mb-5">
                 <thead>
                 <tr>
@@ -13,7 +14,6 @@
                     <th></th>
                 </tr>
                 </thead>
-                {% if otherblogs %}
                 {% for otherblog in otherblogs.items %}
                 <tbody>
                 <tr>
@@ -23,20 +23,15 @@
                 </tr>
                 </tbody>
                 {% endfor %}
-                {% else %}
-                <tbody>
-                    <tr>
-                        <td>
-                            ブログがありません
-                        </td>
-                    </tr>
-                </tbody>
-                {% endif %}
             </table>
+            {% else %}
+                <p class="text-center">ブログがありません</p>
+            {% endif %}
         </div>
     </div>
 </div>
 
+{% if blogs %}
 <nav class="my-5" aria-label="Page navigation">
     <ul class="pagination justify-content-center">
         <li {% if otherblogs.has_prev %} class="page-item" {%else%} class="page-item disabled" {% endif %}><a class="page-link" href="{% if otherblogs.has_prev %}{{ url_for('blogs.other_blog_maintenance', page=otherblogs.prev_num) }}{% else %}#{% endif %}">前へ</a></li>
@@ -58,5 +53,6 @@
     <li {% if otherblogs.has_next %} class="page-item" {% else %} class="page-item disabled" {% endif %}><a class="page-link" href="{% if otherblogs.has_next %}{{ url_for('blogs.other_blog_maintenance',page=otherblogs.next_num) }}{% else %}#{% endif %}">次へ</a></li>
     </ul>
 </nav>
+{% endif %}
 
 {% endblock %}

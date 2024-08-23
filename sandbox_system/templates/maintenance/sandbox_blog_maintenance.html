@@ -5,6 +5,7 @@
     <div class="row">
         <div class="card">
             <h1 class="text-center my-5">ブログ管理(SandBox)</h1>
+            {% if blogs %}
             <table class="table mb-5">
                 <thead>
                 <tr>
@@ -15,7 +16,6 @@
                     <th></th>
                 </tr>
                 </thead>
-                {% if blogs %}
                 {% for blog in blogs.items %}
                 <tbody>
                 <tr>
@@ -27,20 +27,15 @@
                 </tr>
                 </tbody>
                 {% endfor %}
-                {% else %}
-                <tbody>
-                    <tr>
-                        <td>
-                            ブログがありません
-                        </td>
-                    </tr>
-                </tbody>
-                {% endif %}
             </table>
+            {% else %}
+                    <p class="text-center">ブログがありません</p>
+            {% endif %}
         </div>
     </div>
 </div>
 
+{% if blogs %}
 <nav class="my-5" aria-label="Page navigation">
     <ul class="pagination justify-content-center">
         <li {% if blogs.has_prev %} class="page-item" {%else%} class="page-item disabled" {% endif %}><a class="page-link" href="{% if blogs.has_prev %}{{ url_for('blogs.sandbox_blog_maintenance', page=blogs.prev_num) }}{% else %}#{% endif %}">前へ</a></li>
@@ -62,5 +57,6 @@
     <li {% if blogs.has_next %} class="page-item" {% else %} class="page-item disabled" {% endif %}><a class="page-link" href="{% if blogs.has_next %}{{ url_for('blogs.sandbox_blog_maintenance',page=blogs.next_num) }}{% else %}#{% endif %}">次へ</a></li>
     </ul>
 </nav>
+{% endif %}
 
 {% endblock %}
