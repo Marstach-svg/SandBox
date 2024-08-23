@@ -29,7 +29,7 @@ def sandbox_blog_list():
         blog_categories = ''
     page = request.args.get('page', 1, type=int)
     if Blog.query.first():
-        blogs = Blog.query.order_by(Blog.id.desc()).paginate(page=page, per_page=15)
+        blogs = Blog.query.order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     else:
         blogs = ''
     if OtherBlog.query.first():
@@ -59,7 +59,7 @@ def other_blog_list():
     else:
         blog_categories = ''
     if OtherBlog.query.first():
-        otherblogs = OtherBlog.query.order_by(OtherBlog.id.desc()).paginate(page=page, per_page=15)
+        otherblogs = OtherBlog.query.order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
     else:
         otherblogs = ''
     if Blog.query.first():
@@ -241,7 +241,7 @@ def sandbox_blog_search():
         return redirect(url_for('blogs.sandbox_blog_list'))
     page = request.args.get('page', 1, type=int)
     if Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).first():
-        blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=15)
+        blogs = Blog.query.filter((Blog.text.contains(searchtext)) | (Blog.title.contains(searchtext)) | (Blog.summary.contains(searchtext))).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     else:
         blogs = ''
     if BlogCategory.query.first():
@@ -272,7 +272,7 @@ def other_blog_search():
         form.searchtext.data == ''
     page = request.args.get('page', 1, type=int)
     if OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).first():
-        otherblogs = OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=15)
+        otherblogs = OtherBlog.query.filter((OtherBlog.text.contains(searchtext)) | (OtherBlog.title.contains(searchtext)) | (OtherBlog.summary.contains(searchtext))).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
     else:
         otherblogs = ''
     if BlogCategory.query.first():
@@ -340,7 +340,7 @@ def sandbox_category_blog(blog_category_id):
     blog_category = BlogCategory.query.filter_by(id=blog_category_id).first()
     page = request.args.get('page', 1, type=int)
     if Blog.query.filter_by(category_id=blog_category_id).first():
-        blogs = Blog.query.filter_by(category_id=blog_category_id).order_by(Blog.id.desc()).paginate(page=page, per_page=15)
+        blogs = Blog.query.filter_by(category_id=blog_category_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     else:
         blogs = ''
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
@@ -364,7 +364,7 @@ def other_category_blog(blog_category_id):
     blog_category = BlogCategory.query.filter_by(id=blog_category_id).first()
     page = request.args.get('page', 1, type=int)
     if OtherBlog.query.filter_by(category_id=blog_category_id).first():
-        otherblogs = OtherBlog.query.filter_by(category_id=blog_category_id).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=15)
+        otherblogs = OtherBlog.query.filter_by(category_id=blog_category_id).order_by(OtherBlog.id.desc()).paginate(page=page, per_page=10)
     else:
         otherblogs = ''
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
@@ -418,7 +418,7 @@ def user_blog(user_id):
         blog_user = ''
     page = request.args.get('page', 1, type=int)
     if Blog.query.filter_by(user_id=user_id).first():
-        blogs = Blog.query.filter_by(user_id=user_id).order_by(Blog.id.desc()).paginate(page=page, per_page=15)
+        blogs = Blog.query.filter_by(user_id=user_id).order_by(Blog.id.desc()).paginate(page=page, per_page=10)
     else:
         blogs = ''
     if BlogCategory.query.first():

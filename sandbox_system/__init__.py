@@ -31,9 +31,11 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
 from sandbox_system.users.view import users
 from sandbox_system.blogs.view import blogs
 from sandbox_system.chats.view import chats
+from sandbox_system.events.view import events
 from sandbox_system.error_page.error_page import error_pages
 
 app.register_blueprint(users)
 app.register_blueprint(blogs)
 app.register_blueprint(chats)
+app.register_blueprint(events)
 app.register_blueprint(error_pages)

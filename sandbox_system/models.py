@@ -158,13 +158,15 @@ class Event(db.Model):
     __tablename__ = 'event'
 
     id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String(64))
     title = db.Column(db.String(140))
     summary = db.Column(db.String(140))
     text = db.Column(db.Text)
     url = db.Column(db.String(140))
     image = db.Column(db.String(140))
 
-    def __init__(self, title, summary, text, url, image):
+    def __init__(self, category, title, summary, text, url, image):
+        self.category = category
         self.title = title
         self.summary = summary
         self.text = text

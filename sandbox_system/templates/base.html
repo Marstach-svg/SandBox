@@ -38,7 +38,7 @@
                                     <a class="nav-link text-warning mx-2" href="{{ url_for('chats.chat_index') }}">Chat</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-warning mx-2" href="#">Event</a>
+                                    <a class="nav-link text-warning mx-2" href="{{ url_for('events.event_index') }}">Event</a>
                                 </li>
                                 {% if current_user.is_authenticated %}
                                     {% if current_user.is_administrator() %}
