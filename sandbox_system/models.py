@@ -154,6 +154,7 @@ class Chat(db.Model):
         self.user_id = user_id
         self.message = message
 
+
 class Event(db.Model):
     __tablename__ = 'event'
 
