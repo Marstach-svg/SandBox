@@ -8,6 +8,7 @@ from sandbox_system.blogs.image import add_image
 
 blogs = Blueprint('blogs', __name__)
 
+
 #sandboxブログの一覧ページ
 @blogs.route('/sandbox_blog_list', methods=['GET', 'POST'])
 def sandbox_blog_list():
