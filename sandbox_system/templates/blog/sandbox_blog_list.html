@@ -62,7 +62,7 @@
                         <form action="{{ url_for('blogs.sandbox_blog_search') }}" class="d-flex" method="post">
                             {{ form.hidden_tag() }}
                             {{ render_field(form.searchtext, class="form-control", placeholder="検索テキストを入力") }}
-                            {{ form.submit(class="btn btn-warning") }}
+                            {{ form.submit(class="btn btn-secondary") }}
                         </form>
                     </div>
                     <div class="p-4 mb-4 bg-secondary-subtle form-control">
@@ -77,7 +77,7 @@
                                 <a href="{{ url_for('blogs.blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋ブログ作成</a>
                             </div>
                             <div class="col">
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
                             </div>
                         </div>
                     </div>
@@ -111,9 +111,9 @@
                         {% if blog_categories %}
                         {% for blog_category in blog_categories %}
                         <ol class="list-unstyled">
-                            <li>
-                                <a href="{{ url_for('blogs.sandbox_category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none">{{ blog_category.category }}</a>
-                            </li>
+                            <a href="{{ url_for('blogs.sandbox_category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none text-dark"><li class="ms-2">
+                                {{ blog_category.category }}
+                            </li></a>
                             <hr>
                         </ol>
                         {% endfor %}

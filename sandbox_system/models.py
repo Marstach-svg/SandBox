@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+from pytz import timezone
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
 
@@ -24,7 +25,7 @@ class User(db.Model, UserMixin):
     administrator = db.Column(db.String(1))
     blog = db.relationship('Blog', backref = 'author', lazy = 'dynamic')
     blog_comment = db.relationship('BlogComment', backref='commenter', lazy='dynamic')
-    chat = db.relationship('Chat', backref='chat_user', lazy='dynamic')
+    chat_message = db.relationship('ChatMessage', backref='chat_user', lazy='dynamic')
 
     def __init__(self, email, username, introduce, tech, job, image, password, administrator):
         self.email = email
@@ -59,7 +60,7 @@ class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    date = db.Column(db.Date, default = datetime.date.today())
+    date = db.Column(db.DateTime, default=datetime.now(timezone('Asia/Tokyo')))
     category_id = db.Column(db.Integer, db.ForeignKey('blog_category.id'))
     title = db.Column(db.String(140))
     text = db.Column(db.Text)
@@ -143,14 +144,28 @@ class BlogComment(db.Model):
         self.comment = comment
 
 
-class Chat(db.Model):
-    __tablename__ = 'chat'
+class ChatChannel(db.Model):
+    __tablename__ = 'chat_channel'
 
     id = db.Column(db.Integer, primary_key=True)
+    channelname = db.Column(db.String(32))
+
+    def __init__(self, channelname):
+        self.channelname = channelname
+
+
+class ChatMessage(db.Model):
+    __tablename__ = 'chat_message'
+
+    id = db.Column(db.Integer, primary_key=True)
+    channel_id = db.Column(db.Integer, db.ForeignKey('chat_channel.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    date = db.Column(db.DateTime, default=datetime.now(timezone('Asia/Tokyo')))
     message = db.Column(db.String())
 
-    def __init__(self, user_id, message):
+    def __init__(self, date, channel_id, user_id, message):
+        self.date = date
+        self.channel_id = channel_id
         self.user_id = user_id
         self.message = message
 

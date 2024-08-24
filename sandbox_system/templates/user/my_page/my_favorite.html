@@ -73,7 +73,7 @@
                         <form action="{{ url_for('blogs.favorite_blog_search') }}" class="d-flex" method="post">
                             {{ form.hidden_tag() }}
                             {{ render_field(form.searchtext, class="form-control", placeholder="検索テキストを入力") }}
-                            {{ form.submit(class="btn btn-warning") }}
+                            {{ form.submit(class="btn btn-secondary") }}
                         </form>
                     </div>
                     <div class="container">
@@ -82,9 +82,9 @@
                         {% if blog_categories %}
                         {% for blog_category in blog_categories %}
                         <ol class="list-unstyled">
-                            <li>
-                                <a href="{{ url_for('blogs.favorite_category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none">{{ blog_category.category }}</a>
-                            </li>
+                            <a href="{{ url_for('blogs.favorite_category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none text-dark"><li class="ms-2">
+                                {{ blog_category.category }}
+                            </li></a>
                             <hr>
                         </ol>
                         {% endfor %}
