@@ -11,8 +11,7 @@ users = Blueprint('users', __name__)
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        picture = add_image(form.picture.data)
-        user = User(username=form.username.data, email=form.email.data, introduce='例 よろしくお願いします。', tech='例 Python独学1年', job='例 フロントエンドエンジニア', image=picture, password=form.password.data, administrator='0')
+        user = User(username=form.username.data, email=form.email.data, introduce='例 よろしくお願いします。', tech='例 Python独学1年', job='例 フロントエンドエンジニア', image='', password=form.password.data, administrator='0')
         db.session.add(user)
         db.session.commit()
         flash('ユーザーが登録されました')
@@ -80,6 +79,8 @@ def index():
 @users.route('/<int:user_id>/my_page')
 @login_required
 def my_page(user_id):
+    if not current_user.id == user_id:
+        abort(403)
     profile = User.query.filter_by(id=user_id).first()
     return render_template('user/my_page/my_profile.html', profile=profile)
 

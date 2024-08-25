@@ -2,7 +2,7 @@ from flask import Blueprint,render_template, url_for, redirect, abort, flash, re
 from flask_login import login_required, current_user
 from sandbox_system import db
 from sandbox_system.models import Event
-from sandbox_system.events.form import EventForm, EventSearchForm
+from sandbox_system.events.form import EventForm
 from sandbox_system.blogs.image import add_image
 
 
@@ -26,7 +26,6 @@ def event_index():
 #ハッカソン情報一覧
 @events.route('/hackathon_event', methods=['GET', 'POST'])
 def hackathon_event():
-    form = EventSearchForm()
     page = request.args.get('page', 1, type=int)
     if Event.query.filter_by(category='ハッカソン').first():
         hackathon_events = Event.query.filter_by(category='ハッカソン').order_by(Event.id.desc()).paginate(page=page, per_page=10)
@@ -36,12 +35,11 @@ def hackathon_event():
         recent_job_search_events = Event.query.filter_by(category='就活').order_by(Event.id.desc()).limit(3).all()
     else:
         recent_job_search_events = ''
-    return render_template('event/hackathon_event.html', form=form, hackathon_events=hackathon_events, recent_job_search_events=recent_job_search_events)
+    return render_template('event/hackathon_event.html', hackathon_events=hackathon_events, recent_job_search_events=recent_job_search_events)
 
 #就活情報一覧
 @events.route('/job_search_event', methods=['GET', 'POST'])
 def job_search_event():
-    form = EventSearchForm()
     page = request.args.get('page', 1, type=int)
     if Event.query.filter_by(category='就活').first():
         job_search_events = Event.query.filter_by(category='就活').order_by(Event.id.desc()).paginate(page=page, per_page=10)
@@ -51,17 +49,15 @@ def job_search_event():
         recent_hackathon_events = Event.query.filter_by(category='ハッカソン').order_by(Event.id.desc()).limit(3).all()
     else:
         recent_hackathon_events = ''
-    return render_template('event/job_search_event.html', form=form, job_search_events=job_search_events, recent_hackathon_events=recent_hackathon_events)
+    return render_template('event/job_search_event.html', job_search_events=job_search_events, recent_hackathon_events=recent_hackathon_events)
 
 #ハッカソン検索
 @events.route('/hackathon_event_search', methods=['GET', 'POST'])
 def hackathon_event_search():
-    form = EventSearchForm()
-    searchtext = ''
-    if form.validate_on_submit():
-        searchtext = form.searchtext.data
-    elif request.method == 'GET':
-        form.searchtext.data == ''
+    if request.form.get('hackathon_event_search'):
+        searchtext = request.form.get('hackathon_event_search')
+    else:
+        searchtext = ''
     page = request.args.get('page', 1, type=int)
     if Event.query.filter_by(category='ハッカソン').filter((Event.text.contains(searchtext)) | (Event.title.contains(searchtext)) | (Event.summary.contains(searchtext))).first():
         hackathon_events = Event.query.filter_by(category='ハッカソン').filter((Event.text.contains(searchtext)) | (Event.title.contains(searchtext)) | (Event.summary.contains(searchtext))).order_by(Event.id.desc()).paginate(page=page, per_page=10)
@@ -71,17 +67,15 @@ def hackathon_event_search():
         recent_job_search_events = Event.query.filter_by(category='就活').order_by(Event.id.desc()).limit(3).all()
     else:
         recent_job_search_events = ''
-    return render_template('event/hackathon_event.html', hackathon_events=hackathon_events, form=form, searchtext=searchtext, recent_job_search_events=recent_job_search_events)
+    return render_template('event/hackathon_event.html', hackathon_events=hackathon_events, searchtext=searchtext, recent_job_search_events=recent_job_search_events)
 
 #就活検索
 @events.route('/job_search_event_search', methods=['GET', 'POST'])
 def job_search_event_search():
-    form = EventSearchForm()
-    searchtext = ''
-    if form.validate_on_submit():
-        searchtext = form.searchtext.data
-    elif request.method == 'GET':
-        form.searchtext.data == ''
+    if request.form.get('job_search_event_search'):
+        searchtext = request.form.get('job_search_event_search')
+    else:
+        searchtext = ''
     page = request.args.get('page', 1, type=int)
     if Event.query.filter_by(category='就活').filter((Event.text.contains(searchtext)) | (Event.title.contains(searchtext)) | (Event.summary.contains(searchtext))).first():
         job_search_events = Event.query.filter_by(category='就活').filter((Event.text.contains(searchtext)) | (Event.title.contains(searchtext)) | (Event.summary.contains(searchtext))).order_by(Event.id.desc()).paginate(page=page, per_page=10)
@@ -91,7 +85,7 @@ def job_search_event_search():
         recent_hackathon_events = Event.query.filter_by(category='ハッカソン').order_by(Event.id.desc()).limit(3).all()
     else:
         recent_hackathon_events = ''
-    return render_template('event/job_search_event.html', job_search_events=job_search_events, form=form, searchtext=searchtext, recent_hackathon_events=recent_hackathon_events)
+    return render_template('event/job_search_event.html', job_search_events=job_search_events, searchtext=searchtext, recent_hackathon_events=recent_hackathon_events)
 
 #ハッカソン情報追加
 @events.route('/add_hackathon_event', methods=['GET', 'POST'])

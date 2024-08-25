@@ -10,7 +10,6 @@ class RegistrationForm(FlaskForm):
     email = StringField('メールアドレス', validators=[DataRequired(), Email(message='正しいメールアドレスを入力してください')])
     password = PasswordField('パスワード', validators=[DataRequired(), EqualTo('pass_confirm', message='パスワードが一致していません')])
     pass_confirm = PasswordField('パスワード（確認）', validators=[DataRequired()])
-    picture = FileField('アイコン画像', validators=[DataRequired(), FileAllowed(['jpg','jpeg', 'png'])])
     submit = SubmitField('登録')
 
     def validate_username(self, field):

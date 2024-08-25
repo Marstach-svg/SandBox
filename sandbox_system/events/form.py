@@ -12,8 +12,3 @@ class EventForm(FlaskForm):
     url = StringField('ページ先URL', validators=[DataRequired()])
     picture = FileField('アイキャッチ画像', validators=[DataRequired(), FileAllowed(['jpg', 'jpeg', 'png'])])
     submit = SubmitField('投稿')
-
-
-class EventSearchForm(FlaskForm):
-    searchtext = StringField('検索テキスト', validators=[DataRequired()])
-    submit = SubmitField('🔍')

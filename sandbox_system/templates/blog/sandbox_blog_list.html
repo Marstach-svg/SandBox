@@ -60,9 +60,10 @@
                 <div class="position-sticky" style="top: 12rem;">
                     <div class="container-fluid mb-4">
                         <form action="{{ url_for('blogs.sandbox_blog_search') }}" class="d-flex" method="post">
-                            {{ form.hidden_tag() }}
-                            {{ render_field(form.searchtext, class="form-control", placeholder="検索テキストを入力") }}
-                            {{ form.submit(class="btn btn-secondary") }}
+                            <input type="text" name="sandbox_blog_search" class="form-control" placeholder="検索テキストを入力">
+                            <button type="submit" class="btn btn-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                              </svg></button>
                         </form>
                     </div>
                     <div class="p-4 mb-4 bg-secondary-subtle form-control">
@@ -110,12 +111,17 @@
                         <hr>
                         {% if blog_categories %}
                         {% for blog_category in blog_categories %}
-                        <ol class="list-unstyled">
-                            <a href="{{ url_for('blogs.sandbox_category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none text-dark"><li class="ms-2">
-                                {{ blog_category.category }}
-                            </li></a>
-                            <hr>
-                        </ol>
+                            <ol class="list-unstyled">
+                                <li class="d-flex justify-content-between"><a href="{{ url_for('blogs.sandbox_category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none text-dark ms-2">
+                                    {{ blog_category.category }}</a>
+                                    <form action="{{ url_for('blogs.delete_category', category_id=blog_category.id) }}">
+                                        <button type="submit" class="border border-secondary-subtle rounded me-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                        </svg></button>
+                                    </form>
+                                </li>
+                                <hr>
+                            </ol>
                         {% endfor %}
                         {% else %}
                         <p class="text-center my-3">カテゴリがありません</p>
@@ -130,8 +136,8 @@
     <div class="modal" id="addCategoryModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-            <div class="modal-header bg-warning">
-                <h5 class="modal-title">カテゴリ追加</h5>
+            <div class="modal-header bg-secondary">
+                <h5 class="modal-title text-light">カテゴリ追加</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST">
@@ -144,7 +150,7 @@
                 </div>
                 </div>
                 <div class="modal-footer">
-                    {{ category_form.submit(class="btn btn-warning") }}
+                    {{ category_form.submit(class="btn btn-secondary") }}
                 </div>
                 </div>
             </form>

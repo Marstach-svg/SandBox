@@ -40,11 +40,6 @@ class OtherBlogForm(FlaskForm):
         self._set_category()
 
 
-class BlogSearchForm(FlaskForm):
-    searchtext = StringField('検索テキスト', validators=[DataRequired()])
-    submit = SubmitField('🔍')
-
-
 class BlogCategoryForm(FlaskForm):
     category = StringField('カテゴリ名', validators=[DataRequired()])
     submit = SubmitField('保存')
