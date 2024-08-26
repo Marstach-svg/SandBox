@@ -110,6 +110,7 @@ def add_hackathon_event():
             return redirect(url_for('events.hackathon_event'))
     return render_template('event/add_event.html', form=form)
 
+#ハッカソン情報削除
 @events.route('/<int:hackathon_event_id>/delete_hackathon_event', methods=['GET', 'POST'])
 @login_required
 def delete_hackathon_event(hackathon_event_id):
@@ -144,6 +145,7 @@ def add_job_search_event():
             return redirect(url_for('events.job_search_event'))
     return render_template('event/add_event.html', form=form)
 
+#就活情報削除
 @events.route('/<int:job_search_event_id>/delete_job_search__event', methods=['GET', 'POST'])
 @login_required
 def delete_job_search_event(job_search_event_id):

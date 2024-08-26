@@ -7,6 +7,7 @@ from sandbox_system.blogs.image import add_image
 
 users = Blueprint('users', __name__)
 
+#ユーザー登録
 @users.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -19,6 +20,7 @@ def register():
         return redirect(url_for('users.index'))
     return render_template('user/register.html', form=form)
 
+#ログイン
 @users.route('/login', methods=['GET','POST'])
 def login():
     form = LoginForm()
@@ -37,6 +39,7 @@ def login():
             flash('入力されたユーザーは登録されていません')
     return render_template('user/login.html', form=form)
 
+#編集（ユーザー情報更新）
 @users.route('/<int:user_id>/user_update', methods=['GET', 'POST'])
 @login_required
 def user_update(user_id):
@@ -66,6 +69,7 @@ def user_update(user_id):
         form.picture.data = user.image
     return render_template('user/user_update.html', form=form)
 
+#ユーザー削除
 @users.route('/<int:user_id>/delete_user', methods=['GET', 'POST'])
 @login_required
 def delete_user(user_id):
@@ -126,16 +130,19 @@ def delete_user(user_id):
     db.session.commit()
     return redirect(url_for('users.user_maintenance'))
 
+#ログアウト
 @users.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('users.index'))
 
+#トップページ（ホームページ）
 @users.route('/')
 def index():
     return render_template('index.html')
 
+#マイページ
 @users.route('/<int:user_id>/my_page')
 @login_required
 def my_page(user_id):
@@ -144,12 +151,14 @@ def my_page(user_id):
     profile = User.query.filter_by(id=user_id).first()
     return render_template('user/my_page/my_profile.html', profile=profile)
 
+#公開プロフィール
 @users.route('/<int:user_id>/profile')
 @login_required
 def profile(user_id):
     profile = User.query.filter_by(id=user_id).first()
     return render_template('user/my_page/profile.html', profile=profile)
 
+#ユーザー管理ページ
 @users.route('/user_maintenance')
 @login_required
 def user_maintenance():
@@ -159,6 +168,7 @@ def user_maintenance():
     users = User.query.order_by(User.id).paginate(page=page, per_page=10)
     return render_template('maintenance/user_maintenance.html', users=users)
 
+#公開ユーザー一覧
 @users.route('/user_list')
 @login_required
 def user_list():
