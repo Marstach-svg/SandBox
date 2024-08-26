@@ -110,6 +110,17 @@ def add_hackathon_event():
             return redirect(url_for('events.hackathon_event'))
     return render_template('event/add_event.html', form=form)
 
+@events.route('/<int:hackathon_event_id>/delete_hackathon_event', methods=['GET', 'POST'])
+@login_required
+def delete_hackathon_event(hackathon_event_id):
+    if not current_user.is_administrator():
+        abort(403)
+    hackathon_event = Event.query.filter_by(category='ハッカソン', id=hackathon_event_id).first()
+    db.session.delete(hackathon_event)
+    db.session.commit()
+    flash('ハッカソン情報を削除しました')
+    return redirect(url_for('events.hackathon_event'))
+
 #就活情報追加
 @events.route('/add_job_search_event', methods=['GET', 'POST'])
 @login_required
@@ -132,3 +143,14 @@ def add_job_search_event():
             flash('カテゴリ名が間違っています')
             return redirect(url_for('events.job_search_event'))
     return render_template('event/add_event.html', form=form)
+
+@events.route('/<int:job_search_event_id>/delete_job_search__event', methods=['GET', 'POST'])
+@login_required
+def delete_job_search_event(job_search_event_id):
+    if not current_user.is_administrator():
+        abort(403)
+    job_search_event = Event.query.filter_by(category='就活', id=job_search_event_id).first()
+    db.session.delete(job_search_event)
+    db.session.commit()
+    flash('就活情報を削除しました')
+    return redirect(url_for('events.job_search_event'))

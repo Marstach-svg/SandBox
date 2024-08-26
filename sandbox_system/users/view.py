@@ -1,7 +1,7 @@
 from flask import Blueprint,render_template, url_for, redirect, abort, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from sandbox_system import db
-from sandbox_system.models import User
+from sandbox_system.models import User, Blog, BlogFavorite, BlogComment, ChatMessage
 from sandbox_system.users.form import RegistrationForm, LoginForm, UserUpdateForm
 from sandbox_system.blogs.image import add_image
 
@@ -65,6 +65,66 @@ def user_update(user_id):
         form.job.data = user.job
         form.picture.data = user.image
     return render_template('user/user_update.html', form=form)
+
+@users.route('/<int:user_id>/delete_user', methods=['GET', 'POST'])
+@login_required
+def delete_user(user_id):
+    if not current_user.is_administrator():
+        abort(403)
+    user = User.query.get_or_404(user_id)
+    if user.administrator == '1':
+        flash('管理者ユーザーは削除できません')
+        return redirect(url_for('users.user_maintenance'))
+    blogs = Blog.query.filter_by(user_id=user_id).all()
+    chats = ChatMessage.query.filter_by(user_id=user_id).all()
+    favorite_blogs = ''
+    blog_comments = ''
+    if blogs:
+        for blog in blogs:
+            if BlogFavorite.query.filter_by(blog_id=blog.id).first():
+                favorite_blogs = BlogFavorite.query.filter_by(blog_id=blog.id).all()
+            else:
+                favorite_blogs = ''
+            if BlogComment.query.filter_by(blog_id=blog.id).first():
+                blog_comments = BlogComment.query.filter_by(blog_id=blog.id).all()
+            else:
+                blog_comments = ''
+    if BlogFavorite.query.filter_by(favorite_user_id=user_id).first():
+        my_favorite_blogs = BlogFavorite.query.filter_by(favorite_user_id=user_id).all()
+    else:
+        my_favorite_blogs = ''
+    if BlogComment.query.filter_by(user_id=user_id).first():
+        my_blog_comments = BlogComment.query.filter_by(user_id=user_id).all()
+    else:
+        my_blog_comments = ''
+    #BlogFavoriteがBlogに外部キーでつながっているため、外部キーエラーを避けるためにBlogFavoriteのデータを先にdeleteしなければならない
+    if blog_comments:
+        for blog_comment in blog_comments:
+            db.session.delete(blog_comment)
+            db.session.commit()
+    if my_blog_comments:
+        for my_blog_comment in my_blog_comments:
+            db.session.delete(my_blog_comment)
+            db.session.commit()
+    if favorite_blogs:
+        for favorite_blog in favorite_blogs:
+            db.session.delete(favorite_blog)
+            db.session.commit()
+    if my_favorite_blogs:
+        for my_favorite_blog in my_favorite_blogs:
+            db.session.delete(my_favorite_blog)
+            db.session.commit()
+    if blogs:
+        for blog in blogs:
+            db.session.delete(blog)
+            db.session.commit()
+    if chats:
+        for chat in chats:
+            db.session.delete(chat)
+            db.session.commit()
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('users.user_maintenance'))
 
 @users.route('/logout')
 @login_required

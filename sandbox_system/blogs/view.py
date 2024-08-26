@@ -169,8 +169,9 @@ def blog(blog_id):
 @login_required
 def delete_blog(blog_id):
     blog = Blog.query.get_or_404(blog_id)
-    if not blog.author == current_user:
-        abort(403)
+    if not blog.author == current_user :
+        if not current_user.is_administrator():
+            abort(403)
     if BlogFavorite.query.filter_by(blog_id=blog_id).first():
         favorite_blogs = BlogFavorite.query.filter_by(blog_id=blog_id).all()
     else:
@@ -192,6 +193,18 @@ def delete_blog(blog_id):
     db.session.commit()
     flash('ブログ投稿が削除されました')
     return redirect(url_for('blogs.sandbox_blog_list'))
+
+#他ブログ削除
+@blogs.route('/<int:otherblog_id>/delete_other_blog', methods=['GET', 'POST'])
+@login_required
+def delete_other_blog(otherblog_id):
+    otherblog = OtherBlog.query.get_or_404(otherblog_id)
+    if not current_user.is_administrator():
+        abort(403)
+    db.session.delete(otherblog)
+    db.session.commit()
+    flash('ブログ投稿が削除されました')
+    return redirect(url_for('blogs.other_blog_list'))
 
 #ブログ編集
 @blogs.route('/<int:blog_id>/blog_update', methods=['GET', 'POST'])
@@ -232,6 +245,19 @@ def delete_category(category_id):
         db.session.commit()
         flash('カテゴリが削除されました')
         return redirect(url_for('blogs.sandbox_blog_list'))
+
+#ブログコメント削除
+@blogs.route('/<int:blog_id>/<int:comment_id>/<int:user_id>/delete_comment', methods=['GET', 'POST'])
+@login_required
+def delete_comment(blog_id, comment_id, user_id):
+    if not current_user.id == user_id :
+        if not current_user.is_administrator():
+            abort(403)
+    comment = BlogComment.query.get_or_404(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+    flash('コメントが削除されました')
+    return redirect(url_for('blogs.blog', blog_id=blog_id))
 
 #sandboxブログ検索
 @blogs.route('/sandbox_blog_search', methods=['GET', 'POST'])

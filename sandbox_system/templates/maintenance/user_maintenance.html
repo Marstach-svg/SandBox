@@ -30,6 +30,33 @@
                     <td>{{ user.email }}</td>
                     <td><a href="{{ url_for('blogs.user_blog', user_id=user.id) }}" class="btn btn-secondary">詳細</a></td>
                     <td><a href="{{ url_for('users.profile', user_id=user.id) }}" class="btn btn-secondary">詳細</a></td>
+                    {% if current_user.is_administrator() %}
+                        {% if user.administrator == '0' %}
+                        <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#del_modal">
+                            削除
+                        </button></td>
+                        <!-- Modal -->
+                        <div class="modal" id="del_modal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">削除確認</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>このユーザーを削除しますか？</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="{{ url_for('users.delete_user', user_id=user.id) }}" method="POST">
+                                            <input type="submit" class="btn btn-danger" value="削除">
+                                        </form>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endif %}
                 </tr>
                 </tbody>
                 {% endfor %}

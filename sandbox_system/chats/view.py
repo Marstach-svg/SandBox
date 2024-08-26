@@ -38,3 +38,16 @@ def chat_message(channel_id):
         return redirect(url_for('chats.chat_room', channel_id=channel_id))
     else:
         return redirect(url_for('chats.chat_room', channel_id=channel_id))
+
+@chats.route('/<int:chat_message_id>/delete_chat_message', methods=['GET', 'POST'])
+@login_required
+def delete_chat_message(chat_message_id):
+    chat_message = ChatMessage.query.get_or_404(chat_message_id)
+    channel_id = chat_message.channel_id
+    if not current_user.id == chat_message.user_id :
+        if not current_user.is_administrator():
+            abort(403)
+    db.session.delete(chat_message)
+    db.session.commit()
+    flash('チャットメッセージが削除されました')
+    return redirect(url_for('chats.chat_room',channel_id=channel_id))
