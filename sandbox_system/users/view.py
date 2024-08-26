@@ -69,6 +69,14 @@ def user_update(user_id):
         form.picture.data = user.image
     return render_template('user/user_update.html', form=form)
 
+#ユーザー削除確認ページ
+@users.route('/<int:user_id>/delete_confirm', methods=['GET', 'POST'])
+@login_required
+def delete_confirm(user_id):
+    if not current_user.is_administrator():
+        abort(403)
+    return render_template('user/delete_user.html', user_id=user_id)
+
 #ユーザー削除
 @users.route('/<int:user_id>/delete_user', methods=['GET', 'POST'])
 @login_required

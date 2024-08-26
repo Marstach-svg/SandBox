@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container d-flex justify-content-center w-auto">
+    <div class="card">
+        <h5 class="card-header text-center my-1">
+            ユーザー削除確認
+        </h5>
+        <p class="card-body text-center">
+            ユーザーを削除するとそのユーザーに関する全ての情報が削除されます<br>
+            本当にユーザーを削除しますか？
+        </p>
+        <div class="d-flex justify-content-center mb-2">
+            <form action="{{ url_for('users.delete_user', user_id=user_id) }}" method="POST">
+                <button type="submit" class="btn btn-danger">削除</button>
+            </form>
+            <form action="{{ url_for('users.user_maintenance') }}">
+                <button type="submit" class="btn btn-secondary ms-3">キャンセル</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
