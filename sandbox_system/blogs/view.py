@@ -1,5 +1,6 @@
 from flask import Blueprint,render_template, url_for, redirect, abort, flash, request
 from flask_login import login_required, current_user
+
 from sandbox_system import db
 from sandbox_system.models import Blog, BlogCategory, BlogFavorite, OtherBlog, BlogComment
 from sandbox_system.blogs.form import BlogForm, BlogCategoryForm, BlogFavoriteForm, OtherBlogForm, BlogCommentForm
@@ -213,7 +214,8 @@ def blog_update(blog_id):
     form = BlogForm()
     blog = Blog.query.get_or_404(blog_id)
     if not blog.author == current_user:
-        abort(403)
+        if not current_user.is_administrator():
+            abort(403)
     if form.validate_on_submit():
         blog.title = form.title.data
         if form.picture.data:
@@ -230,7 +232,7 @@ def blog_update(blog_id):
         form.category.data = blog.category_id
         form.text.data = blog.text
         form.summary.data = blog.summary
-    return render_template('blog/blog_create.html', form=form)
+    return render_template('blog/blog_update.html', form=form)
 
 #ブログカテゴリ削除
 @blogs.route('/<int:category_id>/delete_category', methods=['GET', 'POST'])

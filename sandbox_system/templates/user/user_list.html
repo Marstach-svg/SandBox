@@ -8,6 +8,7 @@
             <thead>
             <tr>
                 <th></th>
+                <th></th>
                 <th>name</th>
                 <th>blog</th>
                 <th>profile</th>
@@ -16,6 +17,7 @@
             {% for user in users.items %}
             <tbody>
             <tr>
+                <th></th>
                 {% if user.image %}
                 <td><img src="{{ url_for('static', filename='image/' + user.image) }}" class="rounded-circle border border-secondary-subtle" style="width: 50px; height: 50px;" /></td>
                 {% else %}

@@ -2,11 +2,13 @@ from datetime import datetime
 from pytz import timezone
 from flask import Blueprint,render_template, url_for, redirect, abort, flash, request
 from flask_login import login_required, current_user
+
 from sandbox_system import db
 from sandbox_system.models import User, ChatChannel, ChatMessage
 
 
 chats = Blueprint('chats', __name__)
+
 
 #チャットトップページ
 @chats.route('/chat_index', methods=['GET', 'POST'])
@@ -52,5 +54,5 @@ def delete_chat_message(chat_message_id):
             abort(403)
     db.session.delete(chat_message)
     db.session.commit()
-    flash('チャットメッセージが削除されました')
+    flash('メッセージが削除されました')
     return redirect(url_for('chats.chat_room',channel_id=channel_id))
