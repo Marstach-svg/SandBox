@@ -1,5 +1,6 @@
-https://sandbox-rx2xib6pca-an.a.run.app/
-
+デプロイ先URL<br>
+https://sandbox-rx2xib6pca-an.a.run.app/<br>
+<hr>
 使用技術<br>
 言語<br>
 python(flask), html, cssフレームワーク(bootstrap)<br>
