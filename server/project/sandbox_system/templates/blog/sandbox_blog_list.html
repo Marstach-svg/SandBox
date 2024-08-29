@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="container pb-4">
+        <div class="row my-3">
+            <div class="col-md-6 m-auto text-center">
+                {% if searchtext %}
+                    <h1 class="text-center">"{{ searchtext }}"の検索結果</h1>
+                    <hr>
+                {% elif blog_category %}
+                    <h1 class="text-center">{{ blog_category.category }}</h1>
+                    <hr>
+                {% elif blog_user %}
+                    <h1>{{ blog_user.author.username }}のブログ</h1>
+                    <hr>
+                {% else %}
+                    <h1 class="text-center">Blog <span class="fs-5 ms-2 fst-italic">SandBox</span></h1>
+                    <hr>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-9">
+                <div class="row">
+                    {% if blogs %}
+                    {% for blog in blogs.items %}
+                    <div class="col-12 mb-2">
+                        <div class="card h-100">
+                            <div class="card-body" style="max-height: 15rem;">
+                                <div class="container">
+                                    <div class="row row-cols-auto">
+                                        {% if blog.image %}
+                                        <div class="col-3 mb-3" style="text-align: center;">
+                                                <img src="{{ url_for('static', filename='image/' + blog.image) }}" class="img-fluid" style="max-height: 8rem; max-width: 11rem;">
+                                        </div>
+                                        {% endif %}
+                                        <div class="col-9">
+                                            <h5 class="card-title pt-2"><a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="text-decoration-none text-dark">{{ blog.title }}</a></h5>
+                                            <hr>
+                                            <p>{{ blog.summary }}</p>
+                                            <a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="btn btn-secondary">続きを読む…</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-center my-3">ブログがありません</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- サイドバー -->
+            <div class="col-md-3 p-2 bg-opacity-10 border border-secondary border-end-0 border-top-0 border-bottom-0">
+                <div class="position-sticky" style="top: 12rem;">
+                    <div class="container-fluid mb-4">
+                        <form action="{{ url_for('blogs.sandbox_blog_search') }}" class="d-flex" method="post">
+                            <input type="text" name="sandbox_blog_search" class="form-control" placeholder="検索テキストを入力">
+                            <button type="submit" class="btn btn-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                              </svg></button>
+                        </form>
+                    </div>
+                    <div class="p-4 mb-4 bg-secondary-subtle form-control">
+                        <h4>SandBoxとは</h4>
+                        <p>エンジニアをめざす壁が高くエンジニアの交友関係も築きにくいと思われがちな文系学生を助けるために作られたwebアプリ</p>
+                    </div>
+                    <div class="container pb-4">
+                        <h4>Add <span class="fs-6 ms-2 fst-italic">ブログ・カテゴリ追加</span></h4>
+                        <hr>
+                        <div class="row row-cols-auto">
+                            <div class="col">
+                                <a href="{{ url_for('blogs.blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋ブログ作成</a>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container py-3">
+                        <h4>Others <span class="fs-6 ms-2 fst-italic">おすすめ他サイトブログ</span></h4>
+                        <hr>
+                        {% if recent_other_blogs %}
+                        {% for recent_other_blog in recent_other_blogs %}
+                        <div class="col mb-3">
+                            <div class="card h-100">
+                                <div class="card-body" style="max-height: 13rem;">
+                                    {% if recent_other_blog.image %}
+                                        <div style="text-align: center;">
+                                                <img src="{{ url_for('static', filename='image/' + recent_other_blog.image) }}" class="img-fluid card-image-top" style="max-height: 5rem;">
+                                        </div>
+                                    {% endif %}
+                                    <hr>
+                                    <p class="card-title fs-6"><a href="{{ recent_other_blog.url }}" class="text-decoration-none text-dark"><b>{{ recent_other_blog.title }}</b></a></p>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <p class="text-center my-3">ブログがありません</p>
+                        {% endif %}
+                    </div>
+                    <div class="container mb-3">
+                        <h4>Category <span class="fs-6 ms-2 fst-italic">カテゴリ一覧</span></h4>
+                        <hr>
+                        {% if blog_categories %}
+                        {% for blog_category in blog_categories %}
+                            <ol class="list-unstyled">
+                                <li class="d-flex justify-content-between"><a href="{{ url_for('blogs.sandbox_category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none text-dark ms-2">
+                                    {{ blog_category.category }}</a>
+                                    <form action="{{ url_for('blogs.delete_category', category_id=blog_category.id) }}">
+                                        <button type="submit" class="border border-secondary-subtle rounded me-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                        </svg></button>
+                                    </form>
+                                </li>
+                                <hr>
+                            </ol>
+                        {% endfor %}
+                        {% else %}
+                        <p class="text-center my-3">カテゴリがありません</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="addCategoryModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header bg-secondary">
+                <h5 class="modal-title text-light">カテゴリ追加</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST">
+                {{ category_form.hidden_tag() }}
+                <div class="modal-body">
+                <div class="form-group">
+                    <!-- render_fieldは？→formsの中でfieldの中にmessageでエラーを書いていない場合はrender_fieldの必要なし？　下の1文は何？　-->
+                    {{ category_form.category.label(class="form-control-lable") }}
+                    {{ category_form.category(class="form-control") }}
+                </div>
+                </div>
+                <div class="modal-footer">
+                    {{ category_form.submit(class="btn btn-secondary") }}
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if blogs %}
+        <nav class="my-5" aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li {% if blogs.has_prev %} class="page-item" {%else%} class="page-item disabled" {% endif %}><a class="page-link" href="{% if blogs.has_prev %}{{ url_for('blogs.blog_list', page=blogs.prev_num) }}{% else %}#{% endif %}">前へ</a></li>
+
+        {% for page_num in blogs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            <!--ページ番号が表記されている場合（左右の端1つずつと現在のページとその両隣）-->
+            {% if page_num %}
+                {% if blogs.page == page_num %}
+                    <li class="page-item disabled"><a class="page-link" href="#">{{ page_num }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('blogs.blog_list', page=page_num) }}">{{ page_num }}</a></li>
+                {% endif %}
+            <!--ページ番号が表記されていない場合-->
+            {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+            {% endif %}
+        {% endfor %}
+
+            <li {% if blogs.has_next %} class="page-item" {% else %} class="page-item disabled" {% endif %}><a class="page-link" href="{% if blogs.has_next %}{{ url_for('blogs.blog_list',page=blogs.next_num) }}{% else %}#{% endif %}">次へ</a></li>
+            </ul>
+        </nav>
+    {% endif %}
+
+{% endblock %}

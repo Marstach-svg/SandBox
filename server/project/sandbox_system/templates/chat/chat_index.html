@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+
+        <div class="container pb-2">
+            <div class="row my-1">
+                <div class="col-md-6 m-auto text-center">
+                    <h1 class="text-center">Chat</h1>
+                    <hr>
+                </div>
+            </div>
+        </div>
+
+        <div class="container bg-light mb-5">
+            <div class="row">
+                <div class="col-3 border border-secondary rounded">
+                    <div class="position-sticky" style="top: 5rem;">
+                        <div class="container mt-4">
+                            <h5 class="fw-bold ms-2">channel</h5>
+                        </div>
+                        <div class="container">
+                            <hr>
+                            {% for channel in channels %}
+                            <ol class="list-unstyled pt-2">
+                                <a href="{{ url_for('chats.chat_room', channel_id=channel.id) }}" class="text-decoration-none"><li>
+                                    <p class="text-dark fw-bold ms-2">{{ channel.channelname }} <br><span class="fw-normal"></span></p>
+                                </li></a>
+                            </ol>
+                            <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9 border border-secondary rounded bg-light">
+                    <div class="position-sticky bg-light mb-2" style="top: 4rem;">
+                        <div class="container mt-4">
+                            <h5 class="fw-bold ms-2">chat</h5>
+                            <hr>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-center pt-2">チャンネルを選択してください</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

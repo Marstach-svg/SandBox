@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <h1 class="text-center my-3">User <hr class="w-50 mx-auto"></h1>
+        <table class="table border border-secondary-subtle mb-2 mx-auto form-control-lg" style="width: 800px;">
+            <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>name</th>
+                <th>blog</th>
+                <th>profile</th>
+            </tr>
+            </thead>
+            {% for user in users.items %}
+            <tbody>
+            <tr>
+                <th></th>
+                {% if user.image %}
+                <td><img src="{{ url_for('static', filename='image/' + user.image) }}" class="rounded-circle border border-secondary-subtle" style="width: 50px; height: 50px;" /></td>
+                {% else %}
+                <td><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                  </svg></td>
+                {% endif %}
+                <td>{{ user.username }}</td>
+                <td><a href="{{ url_for('blogs.user_blog', user_id=user.id) }}" class="btn btn-secondary">詳細</a></td>
+                <td><a href="{{ url_for('users.profile', user_id=user.id) }}" class="btn btn-secondary">詳細</a></td>
+            </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<nav class="my-5" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li {% if users.has_prev %} class="page-item" {%else%} class="page-item disabled" {% endif %}><a class="page-link" href="{% if users.has_prev %}{{ url_for('users.user_maintenance', page=users.prev_num) }}{% else %}#{% endif %}">前へ</a></li>
+
+{% for page_num in users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    <!--ページ番号が表記されている場合（左右の端1つずつと現在のページとその両隣）-->
+    {% if page_num %}
+        {% if users.page == page_num %}
+            <li class="page-item disabled"><a class="page-link" href="#">{{ page_num }}</a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('users.user_maintenance', page=page_num) }}">{{ page_num }}</a></li>
+        {% endif %}
+    <!--ページ番号が表記されていない場合-->
+    {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+    {% endif %}
+{% endfor %}
+
+    <li {% if users.has_next %} class="page-item" {% else %} class="page-item disabled" {% endif %}><a class="page-link" href="{% if users.has_next %}{{ url_for('users.user_maintenance',page=users.next_num) }}{% else %}#{% endif %}">次へ</a></li>
+    </ul>
+</nav>
+
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+        <div class="container pb-2">
+            <div class="row my-1">
+                <div class="col-md-6 m-auto text-center">
+                    <h1 class="text-center">Chat</h1>
+                    <hr>
+                </div>
+            </div>
+        </div>
+
+        <div class="container bg-light mb-5">
+            <div class="row">
+                <div class="col-3 border border-secondary rounded">
+                    <div class="position-sticky" style="top: 5rem;">
+                        <div class="container mt-4">
+                            <h5 class="fw-bold ms-2">channel</h5>
+                        </div>
+                        <div class="container">
+                            <hr>
+                            {% for channel in channels %}
+                            <ol class="list-unstyled pt-2">
+                                <a href="{{ url_for('chats.chat_room', channel_id=channel.id) }}" class="text-decoration-none"><li>
+                                    <p class="text-dark fw-bold ms-2">{{ channel.channelname }} <br><span class="fw-normal"></span></p>
+                                </li></a>
+                            </ol>
+                            <hr>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9 border border-secondary rounded bg-light">
+                    <div class="position-sticky bg-light mb-2" style="top: 4rem;">
+                        <div class="container">
+                            <div class="row row-cols-auto">
+                                <div class="col">
+                                    <h5 class="mt-4 ms-2 fw-bold">{{ room_channel.channelname }}</h5>
+                                </div>
+                                <div class="col ms-auto">
+                                    <a href="{{ url_for('users.user_list') }}" class="text-decoration-none text-dark"><h5 class="position-end mt-4 me-2">👤{{ number_of_users }}</h5></a>
+                                </div>
+                            </div>
+                        </div>
+                    <hr>
+                    </div>
+                    {% for channel_chat in channel_chats %}
+                    {% if current_user.id != channel_chat.user_id %}
+                    <div>
+                        {% if channel_chat.chat_user.image %}
+                        <div class="d-flex justify-content-start">
+                            <span><a href="{{ url_for('users.profile', user_id=channel_chat.user_id) }}" class="text-decoration-none text-dark"><img src="{{ url_for('static', filename='image/' + channel_chat.chat_user.image) }}" class="rounded-circle border border-secondary-subtle" style="width: 30px; height: 30px;" /> {{ channel_chat.chat_user.username }}</span></a>
+                        </div>
+                        {% else %}
+                        <div class="d-flex justify-content-start">
+                            <span><a href="{{ url_for('users.profile', user_id=channel_chat.user_id) }}" class="text-decoration-none text-dark"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg> {{ channel_chat.chat_user.username }}</span></a>
+                        </div>
+                        {% endif %}
+                        <div class="d-flex justify-content-start mb-1">
+                            <span><span class="form-control border-secondary-subtle w-auto" style="max-width: 700px;"><form action="{{ url_for('chats.delete_chat_message', chat_message_id=channel_chat.id) }}">{{ channel_chat.message }}  {% if current_user.id == channel_chat.user_id or current_user.is_administrator() %}<button type="submit" class="border border-secondary-subtle rounded"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg></button>{% endif %}</form></span>{{ channel_chat.date.strftime('%m/%d %H:%M') }}</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div>
+                        <div class="d-flex justify-content-end">
+                            <span><span class="form-control bg-success-subtle w-auto" style="max-width: 700px;"><form action="{{ url_for('chats.delete_chat_message', chat_message_id=channel_chat.id) }}">{{ channel_chat.message }}  {% if current_user.id == channel_chat.user_id or current_user.is_administrator() %}<button type="submit" class="border border-secondary-subtle rounded"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg></button>{% endif %}</form></span>{{ channel_chat.date.strftime('%m/%d %H:%M') }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    <div class="sticky-bottom bg-light">
+                        <form action="{{ url_for('chats.chat_message', channel_id=channel_id) }}" class="d-flex my-2" method="post">
+                            <input type="text" name="chat_message" class="form-control" placeholder="送信内容を入力してください">
+                            <button type="submit" class="btn btn-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+                                </svg></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

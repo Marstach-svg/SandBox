@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container pb-4">
+    <div class="row my-3">
+        <div class="col-md-6 m-auto text-center">
+            <h1 class="text-center">Event</h1>
+            <hr>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-3">
+    <h4>ハッカソン <a href="{{ url_for('events.hackathon_event') }}" class="btn btn-secondary">詳細</a></h4>
+    <div class="row">
+        {% if hackathon_events %}
+        {% for hackathon_event in hackathon_events.items %}
+        <div class="col-4 my-2">
+            <div class="card h-100">
+                <div class="card-body" style="max-height: 26rem;">
+                    {% if hackathon_event.image %}
+                    <div class="mb-3" style="text-align: center;">
+                        <img src="{{ url_for('static', filename='image/' + hackathon_event.image) }}" class="img-fluid card-img-top" style="max-height: 10rem;">
+                    </div>
+                    {% endif %}
+                    <h3>
+                        <a href="{{ hackathon_event.url }}" class="card-title text-decoration-none">{{ hackathon_event.title }}</a>
+                    </h3>
+                    <p class="card-text">{{ hackathon_event.summary }}</p>
+                    <a href="{{ hackathon_event.url }}" class="btn btn-dark">詳しく…</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>ハッカソン情報がありません</p>
+        {% endif %}
+    </div>
+</div>
+<hr class="mx-auto" style="width: 1500px;">
+<div class="container mt-4 mb-3">
+    <h4>就活 <a href="{{ url_for('events.job_search_event') }}" class="btn btn-secondary">詳細</a></h4>
+    <div class="row">
+        {% if job_search_events %}
+        {% for job_search_event in job_search_events.items %}
+        <div class="col-4 my-2">
+            <div class="card h-100">
+                <div class="card-body" style="max-height: 26rem;">
+                    {% if job_search_event.image %}
+                    <div class="mb-3" style="text-align: center;">
+                        <img src="{{ url_for('static', filename='image/' + job_search_event.image) }}" class="img-fluid card-img-top" style="max-height: 10rem;">
+                    </div>
+                    {% endif %}
+                    <h3>
+                        <a href="{{ job_search_event.url }}" class="card-title text-decoration-none">{{ job_search_event.title }}</a>
+                    </h3>
+                    <p class="card-text">{{ job_search_event.summary }}</p>
+                    <a href="{{ job_search_event.url }}" class="btn btn-dark">詳しく…</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>就活情報がありません</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

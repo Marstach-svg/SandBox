@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="card">
+            <h1 class="text-center my-5">ブログ管理(SandBox)</h1>
+            {% if blogs %}
+            <table class="table mb-5">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>タイトル</th>
+                    <th>日付</th>
+                    <th>著者</th>
+                    <th></th>
+                </tr>
+                </thead>
+                {% for blog in blogs.items %}
+                <tbody>
+                <tr>
+                    <td>{{ blog.id }}</td>
+                    <td>{{ blog.title }}</td>
+                    <td>{{ blog.date }}</td>
+                    <td>{{ blog.author.username }}</td>
+                    <td><a href="{{ url_for('blogs.blog', blog_id=blog.id) }}" class="btn btn-secondary">詳細</a></td>
+                </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+            {% else %}
+                    <p class="text-center">ブログがありません</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if blogs %}
+<nav class="my-5" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li {% if blogs.has_prev %} class="page-item" {%else%} class="page-item disabled" {% endif %}><a class="page-link" href="{% if blogs.has_prev %}{{ url_for('blogs.sandbox_blog_maintenance', page=blogs.prev_num) }}{% else %}#{% endif %}">前へ</a></li>
+
+{% for page_num in blogs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    <!--ページ番号が表記されている場合（左右の端1つずつと現在のページとその両隣）-->
+    {% if page_num %}
+        {% if blogs.page == page_num %}
+            <li class="page-item disabled"><a class="page-link" href="#">{{ page_num }}</a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('blogs.sandbox_blog_maintenance', page=page_num) }}">{{ page_num }}</a></li>
+        {% endif %}
+    <!--ページ番号が表記されていない場合-->
+    {% else %}
+        <li class="page-item disabled"><a class="page-link" href="#">&hellip;</a></li>
+    {% endif %}
+{% endfor %}
+
+    <li {% if blogs.has_next %} class="page-item" {% else %} class="page-item disabled" {% endif %}><a class="page-link" href="{% if blogs.has_next %}{{ url_for('blogs.sandbox_blog_maintenance',page=blogs.next_num) }}{% else %}#{% endif %}">次へ</a></li>
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

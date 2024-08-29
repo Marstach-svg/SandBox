@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mb-4">
+    <div class="row">
+        <div class="col-1">
+            {% if favorite_blog %}
+            <form action="{{ url_for('blogs.blog_favorite_delete', blog_id=blog_id) }}">
+                {{ favorite_form.hidden_tag() }}
+                {{ favorite_form.submit(class='btn btn-danger rounded-circle border border-secondary-subtle')}}
+            </form>
+            {% else %}
+            <form action="{{ url_for('blogs.blog_favorite', blog_id=blog_id) }}">
+                {{ favorite_form.hidden_tag() }}
+                {{ favorite_form.submit(class='btn btn-light rounded-circle border border-secondary-subtle') }}
+            </form>
+            {% endif %}
+        </div>
+        <div class="col-8">
+            <div class="card mb-3">
+                <div class="container"  style="width: 95%;">
+                    <div class="container text-center my-5">
+                        <h3>{{ blog.title }}</h3>
+                        <hr>
+                        <p>{{ blog.date.strftime('%Y/%m/%d') }} : <a href="{{ url_for('users.profile', user_id=blog.user_id) }}" class="text-decoration-none">{{ blog.author.username }}</a> : {{ blog.blogcategory.category }}</p>
+                    </div>
+                    {% if blog.image %}
+                    <div class="mb-3" style="text-align: center;">
+                    <img src="{{ url_for('static', filename='image/' + blog.image) }}" class="img-fluid">
+                    </div>
+                    {% endif %}
+                    <p>{{ blog.text|safe }}</p>
+                    <div class="container pt-3 pb-2">
+                        <div class="row row-cols-auto">
+                            {% if current_user.is_active %}
+                                {% if blog.author == current_user or current_user.is_administrator() %}
+                                    <dib class="col">
+                                        <form action="{{ url_for('blogs.blog_update', blog_id=blog.id) }}" method="get">
+                                        <button type="submit" class="form-control border border-secondary-subtle"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                          </svg></button>
+                                        </form>
+                                    </dib>
+                                    <dib class="col">
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#del_modal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                                              </svg>
+                                        </button>
+                                    </dib>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-light  mb-3">
+                <div class="container">
+                    <div class="row row-cols-auto justify-content-start align-items-center">
+                        {% if blog.author.image %}
+                        <div class="col-md-1">
+                            <a href="{{ url_for('users.profile', user_id=blog.author.id) }}" class="ms-1"><img src="{{ url_for('static', filename='image/' + blog.author.image) }}" alt="profile" class="rounded-circle border border-secondary-subtle" style="width: 55px; height: 55px;" /></a>
+                        </div>
+                        {% else %}
+                        <a href="{{ url_for('users.profile', user_id=blog.author.id) }}" class="ms-1 text-decoration-none text-dark"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg></a>
+                        {% endif %}
+                        <div class="col-md-11">
+                            <a href="{{ url_for('users.profile', user_id=blog.author.id) }}" class="text-decoration-none text-dark"><h5 class="mt-3">{{ blog.author.username }}</h5></a>
+                            <p>
+                            {{ blog.author.introduce }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-1 p-2">
+                <form method="post">
+                    {{ comment_form.hidden_tag() }}
+                    {{ comment_form.comment.label(class="form-control-label") }}
+                    {{ render_field(comment_form.comment, class="form-control form-control-lg") }}
+                    {{ comment_form.submit(class="btn btn-light border border-secondary-subtle m-1") }}
+                </form>
+            </div>
+            <div class="card mb-1">
+                {% if blog_comments %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col mt-2">
+                            <p>コメント</p>
+                            {% for blog_comment in blog_comments %}
+                            {% if blog_comment.commenter.image %}
+                            <p><a href="{{ url_for('users.profile', user_id=blog_comment.user_id) }}"><img src="{{ url_for('static', filename='image/' + blog_comment.commenter.image) }}" class="rounded-circle border border-secondary-subtle" style="width: 30px; height: 30px;" /></a> {{ blog_comment.commenter.username }} <form action="{{ url_for('blogs.delete_comment', comment_id=blog_comment.id, blog_id=blog_comment.blog_id, user_id=blog_comment.user_id) }}">{{ blog_comment.comment }}  {% if current_user.id == blog_comment.commenter.id or current_user.is_administrator() %}<button type="submit" class="border border-secondary-subtle rounded"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg></button>{% endif %}</form></p>
+                            {% else %}
+                            <p><a href="{{ url_for('users.profile', user_id=blog_comment.user_id) }}" class="text-decoration-none text-dark"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/></svg></a> {{ blog_comment.commenter.username }} <form action="{{ url_for('blogs.delete_comment', comment_id=blog_comment.id, blog_id=blog_comment.blog_id, user_id=blog_comment.user_id) }}">{{ blog_comment.comment }}  {% if current_user.id == blog_comment.commenter.id or current_user.is_administrator() %}<button type="submit" class="border border-secondary-subtle rounded"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg></button>{% endif %}</form></p>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <p class="my-3">コメントがありません</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="container pt-2">
+                <div class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-secondary" style="width: 200px;" onclick="history.back()">
+                            戻る
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- サイドバー -->
+        <div class="col-md-3 p-2 bg-opacity-10 border border-secondary border-end-0 border-top-0 border-bottom-0">
+            <div class="position-sticky mt-2" style="top: 9rem;">
+                <div class="container-fluid mb-4">
+                    <form action="{{ url_for('blogs.sandbox_blog_search') }}" class="d-flex" method="post">
+                        <input type="text" name="sandbox_blog_search" class="form-control" placeholder="検索テキストを入力">
+                        <button type="submit" class="btn btn-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                          </svg></button>
+                    </form>
+                </div>
+                <div class="p-4 mb-4 bg-secondary-subtle form-control">
+                    <h4>SandBoxとは</h4>
+                    <p>エンジニアをめざす壁が高くエンジニアの交友関係も築きにくいと思われがちな文系学生を助けるために作られたwebアプリ</p>
+                </div>
+                <div class="container pb-4">
+                    <h4>Add <span class="fs-6 ms-2 fst-italic">ブログ・カテゴリ追加</span></h4>
+                    <hr>
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <a href="{{ url_for('blogs.blog_create') }}" class="btn btn-light border border-dark" disabled tabindex="-1" role="button" aria-disabled="true">＋ブログ作成</a>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">＋カテゴリ追加</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container py-3">
+                    <h4>Others <span class="fs-6 ms-2 fst-italic">おすすめ他サイトブログ</span></h4>
+                    <hr>
+                    {% if recent_other_blogs %}
+                    {% for recent_other_blog in recent_other_blogs %}
+                    <div class="col mb-3">
+                        <div class="card h-100">
+                            <div class="card-body" style="max-height: 13rem;">
+                                {% if recent_other_blog.image %}
+                                    <div style="text-align: center;">
+                                            <img src="{{ url_for('static', filename='image/' + recent_other_blog.image) }}" class="img-fluid card-image-top" style="max-height: 5rem;">
+                                    </div>
+                                {% endif %}
+                                <hr>
+                                <p class="card-title fs-6"><a href="{{ recent_other_blog.url }}" class="text-decoration-none text-dark"><b>{{ recent_other_blog.title }}</b></a></p>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class="text-center my-3">ブログがありません</p>
+                    {% endif %}
+                </div>
+                <div class="container">
+                    <h4>Category <span class="fs-6 ms-2">カテゴリ一覧</span></h4>
+                    <hr>
+                    {% if blog_categories %}
+                        {% for blog_category in blog_categories %}
+                            <ol class="list-unstyled">
+                                <li class="d-flex justify-content-between"><a href="{{ url_for('blogs.sandbox_category_blog', blog_category_id=blog_category.id) }}" class="text-decoration-none text-dark ms-2">
+                                    {{ blog_category.category }}</a>
+                                    <form action="{{ url_for('blogs.delete_category', category_id=blog_category.id) }}">
+                                        <button type="submit" class="border border-secondary-subtle rounded me-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                        </svg></button>
+                                    </form>
+                                </li>
+                                <hr>
+                            </ol>
+                        {% endfor %}
+                    {% else %}
+                    <p class="text-center my-3">カテゴリがありません</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="del_modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">削除確認</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>このブログ投稿を削除しますか？</p>
+            </div>
+            <div class="modal-footer">
+                <form action="{{ url_for('blogs.delete_blog', blog_id=blog.id) }}" method="POST">
+                    <input type="submit" class="btn btn-danger" value="削除">
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

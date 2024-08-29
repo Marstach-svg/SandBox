@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container my-3">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h4>プロフィール編集</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.username.label(class="form-control-label") }}
+                            {{ render_field(form.username, class="form-control form-control-lg") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-control-label") }}
+                            {{ render_field(form.email, class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.introduce.label(class="form-control-label") }}
+                            {{ render_field(form.introduce, class="form-control form-control-lg") }}
+                       </div>
+                        <div class="mb-3">
+                            {{ form.tech.label(class="form-control-label") }}
+                            {{ render_field(form.tech, class="form-control form-control-lg") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.job.label(class="form-control-label") }}
+                            {{ render_field(form.job, class="form-control form-control-lg") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.password.label(class="form-control-label") }}
+                            {{ render_field(form.password, class="form-control form-control-lg") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.pass_confirm.label(class="form-control-label") }}
+                            {{ render_field(form.pass_confirm, class="form-control form-control-lg") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.picture.label(class="form-control-label") }}
+                            <br>
+                            {{ render_field(form.picture, class="form-control-file form-control", style="width: 350px;") }}
+                        </div>
+                        <div class="container mb-3">
+                            <dib class="row">
+                                <div class="col-md-3">
+                                    {{ form.submit(class="btn btn-warning w-100") }}
+                                </div>
+                            </dib>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
