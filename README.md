@@ -8,3 +8,4 @@ python(flask), html, cssフレームワーク(bootstrap)<br>
 MySQL(SQLALCHEMYを使用）<br>
 デプロイ<br>
 CloudRunを用いてデプロイ（githubと連携）<br>
+→ 現在CloudRunでのエラーによりデプロイが出来ておらず、URLがつながりません
