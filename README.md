@@ -18,7 +18,7 @@ html, bootstrap(cssフレームワーク)<br>
 <h5>Backend</h5><br>
 python(flask)<br>
 <h5>Database</h5><br>
-MySQL(SQLALCHEMYを使用<br>
+MySQL(SQLALCHEMYを使用）<br>
 <h5>SourceCodeManagement</h5><br>
 Git/Github
 <h5>CI/CD</h5><br>
