@@ -19,6 +19,8 @@ html, bootstrap(cssフレームワーク)<br>
 python(flask)<br>
 <h5>Database</h5><br>
 MySQL(SQLALCHEMYを使用<br>
+<h5>SourceCodeManagement</h5><br>
+Git/Github
 <h5>CI/CD</h5><br>
 CloudRun（githubと連携）<br>
 → 現在CloudRunでのエラーによりデプロイが出来ておらず、URLがつながりません
