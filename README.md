@@ -13,15 +13,15 @@
 https://sandbox-rx2xib6pca-an.a.run.app/<br>
 <hr>
 <h3>使用技術</h3><br>
-<h5>Frontend</h5><br>
+<h5>-Frontend-</h5><br>
 html, bootstrap(cssフレームワーク)<br>
-<h5>Backend</h5><br>
+<h5>-Backend-</h5><br>
 python(flask)<br>
-<h5>Database</h5><br>
+<h5>-Database-</h5><br>
 MySQL(SQLALCHEMYを使用）<br>
-<h5>SourceCodeManagement</h5><br>
+<h5>-SourceCodeManagement-</h5><br>
 Git/Github
-<h5>CI/CD</h5><br>
+<h5>-CI/CD-</h5><br>
 CloudRun（githubと連携）<br>
 → 現在CloudRunでのエラーによりデプロイが出来ておらず、URLがつながりません
 <hr>
