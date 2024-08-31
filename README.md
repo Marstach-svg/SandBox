@@ -16,7 +16,7 @@ https://sandbox-rx2xib6pca-an.a.run.app/<br>
 <h5>-Frontend-</h5><br>
 html, bootstrap(cssフレームワーク)<br>
 <h5>-Backend-</h5><br>
-python(flask)<br>
+python(Flask)<br>
 <h5>-Database-</h5><br>
 MySQL(SQLALCHEMYを使用）<br>
 <h5>-SourceCodeManagement-</h5><br>
