@@ -12,6 +12,7 @@ blogs = Blueprint('blogs', __name__)
 
 #sandboxブログの一覧ページ
 @blogs.route('/sandbox_blog_list', methods=['GET', 'POST'])
+@login_required
 def sandbox_blog_list():
     category_form = BlogCategoryForm()
     if category_form.validate_on_submit():
@@ -41,6 +42,7 @@ def sandbox_blog_list():
 
 #他サイトブログの一覧ページ
 @blogs.route('/other_blog_list', methods=['GET', 'POST'])
+@login_required
 def other_blog_list():
     category_form = BlogCategoryForm()
     if category_form.validate_on_submit():
@@ -134,6 +136,7 @@ def other_blog_create():
 
 #sandboxブログ詳細ページ
 @blogs.route('/<int:blog_id>/blog', methods=['GET', 'POST'])
+@login_required
 def blog(blog_id):
     blog = Blog.query.get_or_404(blog_id)
     favorite_form = BlogFavoriteForm()
@@ -263,6 +266,7 @@ def delete_comment(blog_id, comment_id, user_id):
 
 #sandboxブログ検索
 @blogs.route('/sandbox_blog_search', methods=['GET', 'POST'])
+@login_required
 def sandbox_blog_search():
     category_form = BlogCategoryForm()
     if request.form.get('sandbox_blog_search'):
@@ -292,6 +296,7 @@ def sandbox_blog_search():
 
 #他サイトブログ検索
 @blogs.route('/other_blog_search', methods=['GET', 'POST'])
+@login_required
 def other_blog_search():
     category_form = BlogCategoryForm()
     if category_form.validate_on_submit():
@@ -341,6 +346,7 @@ def favorite_blog_search():
 
 #自分のブログ内検索
 @blogs.route('/my_blog_search', methods=['GET', 'POST'])
+@login_required
 def my_blog_search():
     if request.form.get('my_blog_search'):
         searchtext = request.form.get('my_blog_search')
@@ -359,6 +365,7 @@ def my_blog_search():
 
 #sandboxブログでカテゴリ検索
 @blogs.route('/<int:blog_category_id>/sandbox_category_blog', methods=['GET', 'POST'])
+@login_required
 def sandbox_category_blog(blog_category_id):
     category_form = BlogCategoryForm()
     if category_form.validate_on_submit():
@@ -382,6 +389,7 @@ def sandbox_category_blog(blog_category_id):
 
 #他サイトブログでカテゴリ検索
 @blogs.route('/<int:blog_category_id>/other_category_blog', methods=['GET', 'POST'])
+@login_required
 def other_category_blog(blog_category_id):
     category_form = BlogCategoryForm()
     if category_form.validate_on_submit():
@@ -418,6 +426,7 @@ def favorite_category_blog(blog_category_id):
 
 #自分のブログでカテゴリ検索
 @blogs.route('/<int:blog_category_id>/my_category_blog', methods=['GET', 'POST'])
+@login_required
 def my_category_blog(blog_category_id):
     blog_category = BlogCategory.query.filter_by(id=blog_category_id).first()
     blog_categories = BlogCategory.query.order_by(BlogCategory.id.asc()).all()
@@ -430,6 +439,7 @@ def my_category_blog(blog_category_id):
 
 #著者検索（sandboxブログ）
 @blogs.route('/<int:user_id>/user_blog', methods=['GET', 'POST'])
+@login_required
 def user_blog(user_id):
     category_form = BlogCategoryForm()
     if category_form.validate_on_submit():

@@ -12,6 +12,7 @@ events = Blueprint('events', __name__)
 
 #イベントトップページ
 @events.route('/event_index', methods=['GET'])
+@login_required
 def event_index():
     page = request.args.get('page', 1, type=int)
     if Event.query.filter_by(category='ハッカソン').first():
@@ -26,6 +27,7 @@ def event_index():
 
 #ハッカソン情報一覧
 @events.route('/hackathon_event', methods=['GET', 'POST'])
+@login_required
 def hackathon_event():
     page = request.args.get('page', 1, type=int)
     if Event.query.filter_by(category='ハッカソン').first():
@@ -40,6 +42,7 @@ def hackathon_event():
 
 #就活情報一覧
 @events.route('/job_search_event', methods=['GET', 'POST'])
+@login_required
 def job_search_event():
     page = request.args.get('page', 1, type=int)
     if Event.query.filter_by(category='就活').first():
@@ -54,6 +57,7 @@ def job_search_event():
 
 #ハッカソン検索
 @events.route('/hackathon_event_search', methods=['GET', 'POST'])
+@login_required
 def hackathon_event_search():
     if request.form.get('hackathon_event_search'):
         searchtext = request.form.get('hackathon_event_search')
@@ -72,6 +76,7 @@ def hackathon_event_search():
 
 #就活検索
 @events.route('/job_search_event_search', methods=['GET', 'POST'])
+@login_required
 def job_search_event_search():
     if request.form.get('job_search_event_search'):
         searchtext = request.form.get('job_search_event_search')
